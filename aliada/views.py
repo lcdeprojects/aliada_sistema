@@ -1,0 +1,159 @@
+# Create your views here.
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db import models
+from .models import PatientRecord, MedicalRecord
+from .forms import PatientRecordForm, MedicalRecordForm, UserRegistrationForm
+
+def home(request):
+    context = {}
+    if request.user.is_authenticated:
+        from django.db.models import Count
+        from django.utils import timezone
+        today = timezone.now().date()
+        context['patients_count'] = PatientRecord.objects.count()
+        context['records_count'] = MedicalRecord.objects.count()
+        context['today_records'] = MedicalRecord.objects.filter(date=today).count()
+    return render(request, 'core/home.html', context)
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    return render(request, 'core/login.html')
+
+@login_required
+def register_view(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'core/register.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+@login_required
+def record_list(request):
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', 'first_name')  # Default sort by first_name
+    records = PatientRecord.objects.all()
+    if query:
+        records = records.filter(
+            models.Q(first_name__icontains=query) | models.Q(last_name__icontains=query)
+        )
+    records = records.order_by(sort_by)
+    paginator = Paginator(records, 10)  # Show 10 records per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'core/record_list.html', {'page_obj': page_obj, 'query': query, 'sort_by': sort_by})
+
+@login_required
+def record_detail(request, pk):
+    record = get_object_or_404(PatientRecord, pk=pk)
+    # Get previous and next records by pk
+    prev_record = PatientRecord.objects.filter(pk__lt=record.pk).order_by('-pk').first()
+    next_record = PatientRecord.objects.filter(pk__gt=record.pk).order_by('pk').first()
+    return render(request, 'core/record_detail.html', {'record': record, 'prev_record': prev_record, 'next_record': next_record})
+
+@login_required
+def record_create(request):
+    if request.method == 'POST':
+        form = PatientRecordForm(request.POST)
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.created_by = request.user
+            record.save()
+            return redirect('record_list')
+    else:
+        form = PatientRecordForm()
+    return render(request, 'core/record_form.html', {'form': form, 'title': 'Create Record'})
+
+@login_required
+def record_update(request, pk):
+    record = get_object_or_404(PatientRecord, pk=pk)
+    if request.method == 'POST':
+        form = PatientRecordForm(request.POST, instance=record)
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.updated_by = request.user
+            record.save()
+            return redirect('record_detail', pk=record.pk)
+    else:
+        form = PatientRecordForm(instance=record)
+    return render(request, 'core/record_form.html', {'form': form, 'title': 'Update Record'})
+
+@login_required
+def patient_detail(request, pk):
+    patient = get_object_or_404(PatientRecord, pk=pk)
+    medical_records = patient.medical_records.all().order_by('-date')
+    return render(request, 'core/patient_detail.html', {'patient': patient, 'medical_records': medical_records})
+
+@login_required
+def record_delete(request, pk):
+    record = get_object_or_404(PatientRecord, pk=pk)
+    if request.method == 'POST':
+        record.delete()
+        return redirect('record_list')
+    return render(request, 'core/record_confirm_delete.html', {'record': record})
+
+@login_required
+def medical_record_create(request, patient_pk):
+    patient = get_object_or_404(PatientRecord, pk=patient_pk)
+    if request.method == 'POST':
+        form = MedicalRecordForm(request.POST, request.FILES)
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.patient = patient
+            record.created_by = request.user
+            record.save()
+            return redirect('patient_detail', pk=patient.pk)
+    else:
+        form = MedicalRecordForm(initial={'patient': patient})
+    return render(request, 'core/medical_record_form.html', {'form': form, 'title': 'Create Medical Record', 'patient': patient})
+
+@login_required
+def medical_record_detail(request, pk):
+    record = get_object_or_404(MedicalRecord, pk=pk)
+    return render(request, 'core/medical_record_detail.html', {'record': record})
+
+@login_required
+def medical_record_update(request, pk):
+    record = get_object_or_404(MedicalRecord, pk=pk)
+    if request.method == 'POST':
+        form = MedicalRecordForm(request.POST, request.FILES, instance=record)
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.updated_by = request.user
+            record.save()
+            return redirect('medical_record_detail', pk=record.pk)
+    else:
+        form = MedicalRecordForm(instance=record)
+    return render(request, 'core/medical_record_form.html', {'form': form, 'title': 'Update Medical Record', 'patient': record.patient})
+
+@login_required
+def medical_record_delete(request, pk):
+    record = get_object_or_404(MedicalRecord, pk=pk)
+    if request.method == 'POST':
+        record.delete()
+        return redirect('patient_detail', pk=record.patient.pk)
+
+@login_required
+def patient_history(request, pk):
+    patient = get_object_or_404(PatientRecord, pk=pk)
+    medical_records = patient.medical_records.all().order_by('-date')
+    return render(request, 'core/patient_history.html', {'patient': patient, 'medical_records': medical_records})

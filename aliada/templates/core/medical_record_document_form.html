@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ title }} - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h1>{{ title }}</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.document.id_for_label }}">Documento:</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">description</i></span>
+                    {{ form.document }}
+                </div>
+                {% if form.document.errors %}
+                    <div class="error">{{ form.document.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit">Enviar</button>
+            <p>
+                <center>
+                <a href="{% url 'medical_record_detail' pk=record.pk %}">Voltar ao Registro Médico</a>
+                </center>
+            </p>
+        </form>
+    </div>
+{% endblock %}

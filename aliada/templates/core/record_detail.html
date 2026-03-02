@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+
+{% block title %}Detalhes do Paciente - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="record-container">
+        <h1>Detalhes do Paciente</h1>
+        <div class="record-navigation">
+            {% if prev_record %}
+                <a href="{% url 'record_detail' pk=prev_record.pk %}" class="nav-link">&larr; Anterior</a>
+            {% endif %}
+            <span class="current-record">Paciente {{ record.pk }}</span>
+            {% if next_record %}
+                <a href="{% url 'record_detail' pk=next_record.pk %}" class="nav-link">Próximo &rarr;</a>
+            {% endif %}
+        </div>
+        <div class="record-card">
+            <div class="record-header">
+                <h2>{{ record.name }}</h2>
+            </div>
+            <div class="record-body">
+                <div class="record-section">
+                    <h3>Informações do Paciente</h3>
+                    <p><strong>Idade:</strong> {{ record.age|default:"N/A" }} anos</p>
+                    <p><strong>Peso:</strong> {{ record.weight|default:"N/A" }} kg</p>
+                    <p><strong>Altura:</strong> {{ record.height|default:"N/A" }} cm</p>
+                </div>
+                <div class="record-section">
+                    <h3>Informações de Criação</h3>
+                    <p><strong>Criado por:</strong> {{ record.created_by.username|default:"N/A" }}</p>
+                    <p><strong>Data de Criação:</strong> {{ record.created_at|date:"d/m/Y H:i" }}</p>
+                    {% if record.updated_by %}
+                        <p><strong>Atualizado por:</strong> {{ record.updated_by.username }}</p>
+                        <p><strong>Data de Atualização:</strong> {{ record.updated_at|date:"d/m/Y H:i" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="record-actions">
+                <button type="button" size="small" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=record.pk %}'">Editar Paciente</button>
+                <button type="button" size="small" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=record.pk %}'">Excluir Paciente</button>
+                <button type="button" size="small" class="back-link" onclick="window.location.href='{% url 'record_list' %}'">Voltar à Lista</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

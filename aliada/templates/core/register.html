@@ -1,0 +1,78 @@
+{% extends "core/base.html" %}
+
+{% block title %}Registro - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h1>Criar Conta</h1>
+        <p>Junte-se ao Sistema Aliada e comece a gerenciar registros médicos de forma eficiente.</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">Nome</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">person</i></span>
+                    {{ form.first_name }}
+                </div>
+                {% if form.first_name.errors %}
+                    <div class="error">{{ form.first_name.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">Sobrenome</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">person</i></span>
+                    {{ form.last_name }}
+                </div>
+                {% if form.last_name.errors %}
+                    <div class="error">{{ form.last_name.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Nome de Usuário</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">account_circle</i></span>
+                    {{ form.username }}
+                </div>
+                {% if form.username.errors %}
+                    <div class="error">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">E-mail</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">email</i></span>
+                    {{ form.email }}
+                </div>
+                {% if form.email.errors %}
+                    <div class="error">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Senha</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">lock</i></span>
+                    {{ form.password1 }}
+                </div>
+                {% if form.password1.errors %}
+                    <div class="error">{{ form.password1.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirme a Senha</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">lock</i></span>
+                    {{ form.password2 }}
+                </div>
+                {% if form.password2.errors %}
+                    <div class="error">{{ form.password2.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit">Criar Conta</button>
+        </form>
+        <div class="form-footer">
+            <p>Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
+            <p><a href="{% url 'home' %}">Voltar ao Início</a></p>
+        </div>
+    </div>
+{% endblock %}

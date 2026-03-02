@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+
+{% block title %}Histórico do Paciente - {{ patient.first_name }} {{ patient.last_name }} - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="record-container">
+        <h1>Histórico Médico</h1>
+        <div class="record-card">
+            <div class="record-header">
+                <h2>Informações do Paciente</h2>
+                <p><strong>Nome:</strong> {{ patient.first_name.upper }} {{ patient.last_name.upper }}</p>
+                <p><strong>Idade:</strong> {{ patient.age|default:"N/A" }} anos</p>
+                <p><strong>Peso:</strong> {{ patient.weight|default:"N/A" }} kg</p>
+                <p><strong>Altura:</strong> {{ patient.height|default:"N/A" }} cm</p>
+            </div>
+            <div class="record-body">
+                <h3>Consultas Médicas</h3>
+                {% if medical_records %}
+                    {% for record in medical_records %}
+                        <div class="record-section">
+                            <h4>{{ record.date | date:"d/m/Y" }} - Atendido por {{ record.created_by.first_name }} {{ record.created_by.last_name }}</h4>
+                            <p><strong>Descrição:</strong> {{ record.description }}</p>
+                            {% if record.weight %}
+                                <p><strong>Peso:</strong> {{ record.weight|floatformat:".0f" }} kg</p>
+                            {% endif %}
+                            {% if record.height %}
+                                <p><strong>Altura:</strong> {{ record.height|floatformat:".0f" }} cm</p>
+                            {% endif %}
+                            {% if record.appointment_feedback %}
+                                <p><strong>Comentários:</strong> {{ record.appointment_feedback }}</p>
+                            {% endif %}
+                            {% if record.image_medical %}
+                                <p><strong>Imagem:</strong> <a href="{{ record.image_medical.url }}" target="_blank">Ver Imagem</a></p>
+                            {% endif %}
+                            {% if record.document %}
+                                <p><strong>Documento:</strong> <a href="{{ record.document.url }}" target="_blank">Ver Documento</a></p>
+                            {% endif %}
+                            <p><small>Criado em: {{ record.created_at | date:"d/m/Y H:i" }} | Atualizado em: {{ record.updated_at | date:"d/m/Y H:i" }}</small></p>
+                            <a href="{% url 'medical_record_detail' pk=record.pk %}" class="view-link">Ver Detalhes</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Nenhum registro médico encontrado.</p>
+                {% endif %}
+            </div>
+            <div class="record-action" style="display: flex; gap: 10px; justify-content: center;">
+                <button type="button" size="small" class="register-link" onclick="window.location.href='{% url 'medical_record_create' patient_pk=patient.pk %}'">Adicionar Consulta Médica</button>
+                <button type="button" size="small" class="back-link" onclick="window.location.href='{% url 'patient_detail' pk=patient.pk %}'">Voltar aos Detalhes do Paciente</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

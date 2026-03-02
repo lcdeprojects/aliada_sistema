@@ -1,0 +1,77 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ title }} - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    <form method="post" enctype="multipart/form-data" id="record-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.patient.id_for_label }}">Paciente:</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">person</i></span>
+                {{ form.patient }}
+            </div>
+                <div class="form-group">
+            <label for="{{ form.patient.id_for_label }}">Responsável:</label>
+            <div class="input-group">
+                {{ user.first_name }} {{ user.last_name }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.date.id_for_label }}">Data:</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">calendar_today</i></span>
+                {{ form.date }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Descrição:</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">local_hospital</i></span>
+                {{ form.description }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.weight.id_for_label }}">Peso (kg):</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">monitor_weight</i></span>
+                {{ form.weight }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.height.id_for_label }}">Altura (cm):</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">height</i></span>
+                {{ form.height }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.appointment_feedback.id_for_label }}">Comentários da Consulta:</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">comment</i></span>
+                {{ form.appointment_feedback }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.image_medical.id_for_label }}">Imagem:</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">image</i></span>
+                {{ form.image_medical }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.document.id_for_label }}">Documento:</label>
+            <div class="input-group">
+                <span class="input-group-icon"><i class="material-icons">description</i></span>
+                {{ form.document }}
+            </div>
+        </div>
+        <button type="submit">Enviar</button>
+        <p>
+            <center>
+            <a href="{% url 'patient_detail' pk=patient.pk %}">Voltar ao Paciente</a>
+            </center>
+        </p>
+    </form>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+
+{% block title %}Excluir Paciente - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <h1>Excluir Paciente</h1>
+    <p>Tem certeza de que deseja excluir "{{ record.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="delete-link">Sim, Excluir</button>
+    </form>
+    <a href="{% url 'record_detail' pk=record.pk %}">Cancelar</a>
+{% endblock %}

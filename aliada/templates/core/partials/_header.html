@@ -1,0 +1,23 @@
+    <header class="main-header">
+        <div class="header-container">
+            <div class="header-logo">
+                <h1>Aliada</h1>
+            </div>
+            <nav class="header-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="{% url 'home' %}">Início</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a href="{% url 'record_list' %}">Registros Médicos</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="header-user">
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">Olá, {{ user.first_name|default:user.username }}</span>
+                    <a href="{% url 'logout' %}" class="btn-logout">Sair</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-login">Entrar</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>

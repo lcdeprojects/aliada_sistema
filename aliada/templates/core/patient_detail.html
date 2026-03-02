@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+
+{% block title %}Detalhes do Paciente - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="record-container">
+        <h1>Detalhes do Paciente</h1>
+        <div class="record-card">
+            <div class="record-header">
+                <h2>{{ patient.first_name.upper }} {{ patient.last_name.upper }}</h2>
+            </div>
+            <div class="record-body">
+                <div class="record-section">
+                    <h3>Informações do Paciente</h3>
+                    <p><strong>Idade:</strong> {{ patient.age|default:"N/A" }} anos</p>
+                    <p><strong>Peso:</strong> {{ patient.weight|default:"N/A" }} kg</p>
+                    <p><strong>Altura:</strong> {{ patient.height|default:"N/A" }} cm</p>
+                </div>
+                <div class="record-section">
+                    <h3>Consultas Médicas</h3>
+                    {% if medical_records %}
+                        <ul>
+                            {% for record in medical_records %}
+                                <li>
+                                    <a href="{% url 'medical_record_detail' pk=record.pk %}">{{ record.date | date:"d/m/Y" }} - {{ record.description|truncatechars:50 }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhum registro médico encontrado.</p>
+                    {% endif %}
+                    <div class="record-actions">
+                        <button type="button" size="small" class="register-link" onclick="window.location.href='{% url 'medical_record_create' patient_pk=patient.pk %}'">Adicionar Consulta Médica</button>
+                        <button type="button" size="small" class="history-link" onclick="window.location.href='{% url 'patient_history' pk=patient.pk %}'">Ver Histórico Completo</button>
+                    </div>
+                </div>
+            </div>
+            <div class="record-actions">
+                <button type="button" size="small" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=patient.pk %}'">Editar Paciente</button>
+                <button type="button" size="small" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=patient.pk %}'">Excluir Paciente</button>
+                <button type="button" size="small" class="back-link" onclick="window.location.href='{% url 'record_list' %}'">Voltar à Lista</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
