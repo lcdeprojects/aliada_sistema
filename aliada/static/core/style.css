@@ -761,6 +761,87 @@ footer {
     }
 }
 
+/* Balance Table Styles */
+.balance-table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+}
+
+.balance-table th,
+.balance-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.balance-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.balance-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.balance-table a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.balance-table a:hover {
+    text-decoration: underline;
+}
+
+.balance-table .actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: nowrap;
+}
+
+.balance-table .actions button {
+    padding: 6px 12px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.balance-table .actions button[type="button"]:nth-child(1) {
+    background: var(--primary-color);
+    color: white;
+}
+
+.balance-table .actions button[type="button"]:nth-child(1):hover {
+    background: var(--primary-dark);
+}
+
+.balance-table .actions button[type="button"]:nth-child(2) {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.balance-table .actions button[type="button"]:nth-child(2):hover {
+    background: #138496;
+}
+
+.balance-table .actions button[type="button"]:nth-child(3) {
+    background: var(--danger-color);
+    color: white;
+}
+
+.balance-table .actions button[type="button"]:nth-child(3):hover {
+    background: #c82333;
+}
+
 .record-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -984,4 +1065,85 @@ footer {
         width: 100%;
         max-width: 300px;
     }
+}
+
+/* Balance Table Styles */
+.balance-table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+}
+
+.balance-table th,
+.balance-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.balance-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.balance-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.balance-table a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.balance-table a:hover {
+    text-decoration: underline;
+}
+
+.balance-table .actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: nowrap;
+}
+
+.balance-table .actions button {
+    padding: 6px 12px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.balance-table .actions button[type="button"]:nth-child(1) {
+    background: var(--primary-color);
+    color: white;
+}
+
+.balance-table .actions button[type="button"]:nth-child(1):hover {
+    background: var(--primary-dark);
+}
+
+.balance-table .actions button[type="button"]:nth-child(2) {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.balance-table .actions button[type="button"]:nth-child(2):hover {
+    background: #138496;
+}
+
+.balance-table .actions button[type="button"]:nth-child(3) {
+    background: var(--danger-color);
+    color: white;
+}
+
+.balance-table .actions button[type="button"]:nth-child(3):hover {
+    background: #c82333;
 }

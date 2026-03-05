@@ -21,6 +21,11 @@
                     <p>Crie um novo registro médico para um paciente.</p>
                     <a href="{% url 'record_create' %}" class="card-link">Criar Registro</a>
                 </div>
+                <div class="card">
+                    <h3>Gerenciar Balanços</h3>
+                    <p>Visualize, crie e atualize balanços financeiros.</p>
+                    <a href="{% url 'balance_list' %}" class="card-link">Ir para Balanços</a>
+                </div>
             </div>
         </section>
     {% else %}

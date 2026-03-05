@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+
+{% block title %}Detalhes do Saldo - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="record-container">
+        <h1>Detalhes do Saldo</h1>
+        <div class="record-card">
+            <div class="record-header">
+                <h2>{{ balance.patient.first_name }} {{ balance.patient.last_name }} - {{ balance.type }}</h2>
+            </div>
+            <div class="record-body">
+                <div class="record-section">
+                    <h3>Informações do Saldo</h3>
+                    <p><strong>Paciente:</strong> {{ balance.patient.first_name }} {{ balance.patient.last_name }}</p>
+                    <p><strong>Data:</strong> {{ balance.date|date:"d/m/Y" }}</p>
+                    <p><strong>Tipo:</strong> {{ balance.type }}</p>
+                    <p><strong>Valor:</strong> R$ {{ balance.amount }}</p>
+                    <p><strong>Descrição:</strong> {{ balance.description }}</p>
+                </div>
+                <div class="record-section">
+                    <h3>Informações de Criação</h3>
+                    <p><strong>Criado por:</strong> {{ balance.created_by.username|default:"N/A" }}</p>
+                    <p><strong>Data de Criação:</strong> {{ balance.created_at|date:"d/m/Y H:i" }}</p>
+                    {% if balance.updated_by %}
+                        <p><strong>Atualizado por:</strong> {{ balance.updated_by.username }}</p>
+                        <p><strong>Data de Atualização:</strong> {{ balance.updated_at|date:"d/m/Y H:i" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="record-actions">
+                <button type="button" size="small" class="edit-link" onclick="window.location.href='{% url 'balance_update' pk=balance.pk %}'">Editar Saldo</button>
+                <button type="button" size="small" class="delete-link" onclick="window.location.href='{% url 'balance_delete' pk=balance.pk %}'">Excluir Saldo</button>
+                <button type="button" size="small" class="back-link" onclick="window.location.href='{% url 'balance_list' %}'">Voltar à Lista</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

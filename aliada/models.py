@@ -10,6 +10,8 @@ from django.utils import timezone
 class PatientRecord(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     age = models.IntegerField(blank=True, null=True, help_text="Age in years")
     weight = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, help_text="Weight in kg")
     height = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, help_text="Height in cm")
@@ -38,4 +40,18 @@ class MedicalRecord(models.Model):
 
     def __str__(self):
         return f"Record for {self.patient.first_name} {self.patient.last_name} on {self.date}"
+
+class Balance(models.Model):
+    patient = models.ForeignKey(PatientRecord, on_delete=models.CASCADE, related_name='balances')
+    date = models.DateField()
+    type = models.CharField(max_length=50)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_balances')
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_balances')
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Balance for {self.patient.first_name} {self.patient.last_name} on {self.date}"
 

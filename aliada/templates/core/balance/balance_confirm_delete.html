@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+
+{% block title %}Excluir Saldo - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <h1>Excluir Saldo</h1>
+    <p>Tem certeza de que deseja excluir "{{ balance }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="delete-link">Sim, Excluir</button>
+    </form>
+    <a href="{% url 'balance_detail' pk=balance.pk %}">Cancelar</a>
+{% endblock %}

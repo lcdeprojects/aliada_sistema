@@ -5,8 +5,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import models
-from .models import PatientRecord, MedicalRecord
-from .forms import PatientRecordForm, MedicalRecordForm, UserRegistrationForm
+from django.db.models import Sum
+from .models import PatientRecord, MedicalRecord, Balance
+from .forms import PatientRecordForm, MedicalRecordForm, UserRegistrationForm, BalanceForm
+from .groups import group_required
 
 def home(request):
     context = {}
@@ -47,7 +49,7 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-@login_required
+@group_required('admin')
 def record_list(request):
     query = request.GET.get('q', '')
     sort_by = request.GET.get('sort', 'first_name')  # Default sort by first_name
@@ -60,15 +62,15 @@ def record_list(request):
     paginator = Paginator(records, 10)  # Show 10 records per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'core/record_list.html', {'page_obj': page_obj, 'query': query, 'sort_by': sort_by})
+    return render(request, 'core/patient/record_list.html', {'page_obj': page_obj, 'query': query, 'sort_by': sort_by})
 
-@login_required
+@group_required('admin')
 def record_detail(request, pk):
     record = get_object_or_404(PatientRecord, pk=pk)
     # Get previous and next records by pk
     prev_record = PatientRecord.objects.filter(pk__lt=record.pk).order_by('-pk').first()
     next_record = PatientRecord.objects.filter(pk__gt=record.pk).order_by('pk').first()
-    return render(request, 'core/record_detail.html', {'record': record, 'prev_record': prev_record, 'next_record': next_record})
+    return render(request, 'core/patient/record_detail.html', {'record': record, 'prev_record': prev_record, 'next_record': next_record})
 
 @login_required
 def record_create(request):
@@ -81,7 +83,7 @@ def record_create(request):
             return redirect('record_list')
     else:
         form = PatientRecordForm()
-    return render(request, 'core/record_form.html', {'form': form, 'title': 'Create Record'})
+    return render(request, 'core/patient/record_form.html', {'form': form, 'title': 'Create Record'})
 
 @login_required
 def record_update(request, pk):
@@ -95,13 +97,13 @@ def record_update(request, pk):
             return redirect('record_detail', pk=record.pk)
     else:
         form = PatientRecordForm(instance=record)
-    return render(request, 'core/record_form.html', {'form': form, 'title': 'Update Record'})
+    return render(request, 'core/patient/record_form.html', {'form': form, 'title': 'Update Record'})
 
-@login_required
+@group_required('admin')
 def patient_detail(request, pk):
     patient = get_object_or_404(PatientRecord, pk=pk)
     medical_records = patient.medical_records.all().order_by('-date')
-    return render(request, 'core/patient_detail.html', {'patient': patient, 'medical_records': medical_records})
+    return render(request, 'core/patient/patient_detail.html', {'patient': patient, 'medical_records': medical_records})
 
 @login_required
 def record_delete(request, pk):
@@ -109,9 +111,9 @@ def record_delete(request, pk):
     if request.method == 'POST':
         record.delete()
         return redirect('record_list')
-    return render(request, 'core/record_confirm_delete.html', {'record': record})
+    return render(request, 'core/patient/record_confirm_delete.html', {'record': record})
 
-@login_required
+@group_required('admin')
 def medical_record_create(request, patient_pk):
     patient = get_object_or_404(PatientRecord, pk=patient_pk)
     if request.method == 'POST':
@@ -124,12 +126,12 @@ def medical_record_create(request, patient_pk):
             return redirect('patient_detail', pk=patient.pk)
     else:
         form = MedicalRecordForm(initial={'patient': patient})
-    return render(request, 'core/medical_record_form.html', {'form': form, 'title': 'Create Medical Record', 'patient': patient})
+    return render(request, 'core/medical/medical_record_form.html', {'form': form, 'title': 'Create Medical Record', 'patient': patient})
 
 @login_required
 def medical_record_detail(request, pk):
     record = get_object_or_404(MedicalRecord, pk=pk)
-    return render(request, 'core/medical_record_detail.html', {'record': record})
+    return render(request, 'core/medical/medical_record_detail.html', {'record': record})
 
 @login_required
 def medical_record_update(request, pk):
@@ -143,7 +145,7 @@ def medical_record_update(request, pk):
             return redirect('medical_record_detail', pk=record.pk)
     else:
         form = MedicalRecordForm(instance=record)
-    return render(request, 'core/medical_record_form.html', {'form': form, 'title': 'Update Medical Record', 'patient': record.patient})
+    return render(request, 'core/medical/medical_record_form.html', {'form': form, 'title': 'Update Medical Record', 'patient': record.patient})
 
 @login_required
 def medical_record_delete(request, pk):
@@ -156,4 +158,65 @@ def medical_record_delete(request, pk):
 def patient_history(request, pk):
     patient = get_object_or_404(PatientRecord, pk=pk)
     medical_records = patient.medical_records.all().order_by('-date')
-    return render(request, 'core/patient_history.html', {'patient': patient, 'medical_records': medical_records})
+    return render(request, 'core/patient/patient_history.html', {'patient': patient, 'medical_records': medical_records})
+    
+#BAL
+@group_required('Administrador')
+def balance_create(request):
+    if request.method == 'POST':
+        form = BalanceForm(request.POST)
+        if form.is_valid():
+            balance = form.save(commit=False)
+            balance.created_by = request.user
+            balance.save()
+            return redirect('balance_list')
+    else:
+        form = BalanceForm()
+    return render(request, 'core/balance/balance_form.html', {'form': form, 'title': 'Create Balance'})
+
+@group_required('Administrador')
+def balance_list(request):
+    query = request.GET.get('q', '')
+    query2 = request.GET.get('q2', '')
+    balances = Balance.objects.all()
+    if query and query2:
+        balances = balances.filter(date__range=[query, query2])
+    elif query:
+        balances = balances.filter(date__gte=query)
+    balances = balances.order_by('-date')
+    total = balances.aggregate(Sum('amount'))['amount__sum'] or 0
+    return render(request, 'core/balance/balance_list.html', {'balances': balances, 'query': query, 'query2': query2, 'total': total})
+
+@group_required('Administrador')
+def balance_detail(request, pk):
+    balance = get_object_or_404(Balance, pk=pk)
+    return render(request, 'core/balance/balance_detail.html', {'balance': balance})
+
+@group_required('Administrador')
+def balance_update(request, pk):
+    balance = get_object_or_404(Balance, pk=pk)
+    if request.method == 'POST':
+        form = BalanceForm(request.POST, instance=balance)
+        if form.is_valid():
+            balance = form.save(commit=False)
+            balance.updated_by = request.user
+            balance.save()
+            return redirect('balance_detail', pk=balance.pk)
+    else:
+        form = BalanceForm(instance=balance)
+    return render(request, 'core/balance/balance_form.html', {'form': form, 'title': 'Update Balance'})
+
+@group_required('Administrador')
+def balance_delete(request, pk):
+    balance = get_object_or_404(Balance, pk=pk)
+    if request.method == 'POST':
+        balance.delete()
+        return redirect('balance_list')
+    return render(request, 'core/balance/balance_confirm_delete.html', {'balance': balance})
+
+
+@group_required('Administrador')
+def sum_balances(request):
+    balances = Balance.objects.all()
+    total = balances.aggregate(Sum('amount'))['amount__sum'] or 0
+    return render(request, 'core/balance/sum_balances.html', {'balances': balances, 'total': total})
