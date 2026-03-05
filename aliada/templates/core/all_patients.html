@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+
+{% block title %}Todos os Pacientes - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="welcome-section">
+    </div>
+
+    <div class="patients-summary">
+        <div class="summary-card">
+            <i class="material-icons" style="font-size: 2em; color: var(--primary-color);">people</i>
+            <h3>{{ patients.count }} Pacientes</h3>
+            <p>Total de pacientes registrados no sistema</p>
+        </div>
+    </div>
+
+    <div class="all-patients-list">
+        {% for patient in patients %}
+            <div class="patient-item">
+                <div class="patient-info">
+                    <div class="patient-name">
+                        <i class="material-icons">person</i>
+                        <h4><a href="{% url 'patient_detail' pk=patient.pk %}">{{ patient.first_name }} {{ patient.last_name }}</a></h4>
+                    </div>
+                </div>
+                <div class="patient-actions">
+                    <button type="button" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=patient.pk %}'">
+                        <i class="material-icons">edit</i> Editar
+                    </button>
+                    <button type="button" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=patient.pk %}'">
+                        <i class="material-icons">delete</i> Excluir
+                    </button>
+                </div>
+            </div>
+        {% empty %}
+            <div class="no-results">
+                <i class="material-icons" style="font-size: 4em; color: var(--gray-color); margin-bottom: 20px;">inbox</i>
+                <h2>Nenhum paciente encontrado</h2>
+                <p>Não há pacientes registrados no sistema. <a href="{% url 'record_create' %}" class="create-link">Adicione o primeiro paciente</a>.</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

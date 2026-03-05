@@ -1,19 +1,25 @@
 # Create your views here.
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import models
 from django.db.models import Sum
-from .models import PatientRecord, MedicalRecord, Balance
-from .forms import PatientRecordForm, MedicalRecordForm, UserRegistrationForm, BalanceForm
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .forms import (
+    BalanceForm,
+    MedicalRecordForm,
+    PatientRecordForm,
+    UserRegistrationForm,
+)
 from .groups import group_required
+from .models import Balance, MedicalRecord, PatientRecord
+
 
 def home(request):
     context = {}
     if request.user.is_authenticated:
-        from django.db.models import Count
         from django.utils import timezone
         today = timezone.now().date()
         context['patients_count'] = PatientRecord.objects.count()
@@ -33,7 +39,7 @@ def login_view(request):
             messages.error(request, 'Invalid username or password.')
     return render(request, 'core/login.html')
 
-@login_required
+@group_required('Administrador')
 def register_view(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -220,3 +226,8 @@ def sum_balances(request):
     balances = Balance.objects.all()
     total = balances.aggregate(Sum('amount'))['amount__sum'] or 0
     return render(request, 'core/balance/sum_balances.html', {'balances': balances, 'total': total})
+
+@group_required('Administrador', 'Secretaria')
+def all_patients(request):
+    patients = PatientRecord.objects.all().order_by('first_name', 'last_name')
+    return render(request, 'core/all_patients.html', {'patients': patients})
