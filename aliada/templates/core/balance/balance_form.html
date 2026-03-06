@@ -3,8 +3,13 @@
 {% block title %}{{ title }} - Sistema Aliada{% endblock %}
 
 {% block content %}
-    <h1>{{ title }}</h1>
+    <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+        <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'balance_list' %}'">chevron_left</i>
+        <h1>Criar Registro Financeiro</h1>
+    </header>
+        
     <form method="post" enctype="multipart/form-data" id="balance-form">
+        
         {% csrf_token %}
         <div class="form-group">
             <label for="{{ form.patient.id_for_label }}">Paciente:</label>
@@ -42,5 +47,7 @@
         </div>
         <button class="feature-link" type="submit">Salvar</button>
     </form>
+    <center>
     <a href="{% url 'balance_list' %}">Voltar à Lista</a>
+    </center>
 {% endblock %}

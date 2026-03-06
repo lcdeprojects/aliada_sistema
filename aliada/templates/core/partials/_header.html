@@ -1,17 +1,9 @@
 {% load static %}
     <header class="main-header">
         <div class="header-container">
-            <div class="header-logo">
-                <img src="{% static 'core/images/aliada_logo.png' %}" alt="Logo" class="logo"> 
-            </div>
-            <nav class="header-nav">
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="{% url 'home' %}">Início</a></li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item"><a href="{% url 'record_list' %}">Registros Médicos</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
+            <button style="width: 50px;" id="sidebar-toggle" class="sidebar-toggle-btn">
+                <i class="material-icons">menu</i>
+            </button>
             <div class="header-user">
                 {% if user.is_authenticated %}
                     <span class="user-greeting">Olá, {{ user.first_name|default:user.username }}</span>

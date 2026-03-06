@@ -1,0 +1,45 @@
+{% load static %}
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <img src="{% static 'core/images/aliada_logo.png' %}" alt="Logo" class="sidebar-logo">
+        <h2>Aliada - Saúde e Medicina</h2>
+    </div>
+    <nav class="sidebar-nav">
+        <ul class="sidebar-list">
+            <li class="sidebar-item">
+                <a href="{% url 'home' %}" class="sidebar-link">
+                    <i class="material-icons">home</i>
+                    <span>Início</span>
+                </a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="sidebar-item">
+                <a href="{% url 'record_list' %}" class="sidebar-link">
+                    <i class="material-icons">people</i>
+                    <span>Pacientes</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'balance_list' %}" class="sidebar-link">
+                    <i class="material-icons">account_balance_wallet</i>
+                    <span>Saldos</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'active_plan' %}" class="sidebar-link">
+                    <i class="material-icons">event_note</i>
+                    <span>Planos</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="sidebar-footer">
+        {% if user.is_authenticated %}
+        <span class="sidebar-user">Olá, {{ user.first_name|default:user.username }}</span>
+        <a href="{% url 'logout' %}" class="sidebar-logout">Sair</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="sidebar-login">Entrar</a>
+        {% endif %}
+    </div>
+</aside>

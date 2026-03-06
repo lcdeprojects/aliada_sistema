@@ -3,7 +3,11 @@
 {% block title %}{{ title }} - Sistema Aliada{% endblock %}
 
 {% block content %}
-    <h1>Novo Paciente</h1>
+    <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+        <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'record_list' %}'">chevron_left</i>
+        <h1>Novo Paciente</h1>
+        <i class="material-icons" style="cursor: pointer; margin-left: 10px; font-size: 40px;" onclick="window.location.href='{% url 'home' %}'">home</i>
+    </header>
     <form method="post" enctype="multipart/form-data" id="record-form">
         {% csrf_token %}
         <div class="form-group">

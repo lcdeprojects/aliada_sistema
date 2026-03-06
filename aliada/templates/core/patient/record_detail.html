@@ -4,7 +4,9 @@
 
 {% block content %}
     <div class="record-container">
+            <center>
         <h1>Detalhes do Paciente</h1>
+    </center>
         <div class="record-navigation">
             {% if prev_record %}
                 <a href="{% url 'record_detail' pk=prev_record.pk %}" class="nav-link">&larr; Anterior</a>

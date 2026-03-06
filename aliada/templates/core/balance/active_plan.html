@@ -1,11 +1,14 @@
 {% extends "core/base.html" %}
 
-{% block title %}Saldos - Sistema Aliada{% endblock %}
+{% block title %}Planos - Sistema Aliada{% endblock %}
 
 {% block content %}
-    <div class="welcome-section">
-        <p>Gerenciamento de Saldos</p>
-    </div>
+<section class="dashboard-section">
+    <div class="container">
+    <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+        <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'home' %}'">chevron_left</i>
+        <h1>Gerenciamento de Planos</h1>
+    </header>
     <form method="get" class="search-form">
         <select name="status">
             <option value="active" {% if status == 'active' %}selected{% endif %}>Ativo</option>
@@ -17,8 +20,6 @@
             <a href="?status=active">Limpar</a>
         {% endif %}
     </form>
-
-
     <table class="balance-table">
         <thead>
             <tr>
@@ -57,4 +58,6 @@
             <h2>Nenhum saldo encontrado</h2>
         </div>
     {% endif %}
+    </div>
+</section>
 {% endblock %}

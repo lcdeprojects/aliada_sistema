@@ -5,7 +5,10 @@
 {% block content %}
     <section class="dashboard-section">
         <div class="container">
-            <h2 class="section-title">Gerenciamento de Pacientes</h2>
+               <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+        <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'home' %}'">chevron_left</i>
+        <h1>Gerenciamento de Pacientes</h1>
+    </header>
             <form method="get" class="search-form">
                 <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar por nome...">
                 <button class="feature-link"     type="submit">Pesquisar</button>

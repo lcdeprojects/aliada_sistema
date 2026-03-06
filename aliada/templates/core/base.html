@@ -1,7 +1,34 @@
 {% include "core/partials/_head.html" %}
 
-    {% block content %}{% endblock %}
+<div class="app-layout">
+    {% include "core/partials/_sidebar.html" %}
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+</div>
 
-    {% block extra_js %}{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const dashboardSection = document.querySelector('.dashboard-section');
+            const statsSection = document.querySelector('.stats-section');
+            sidebar.classList.toggle('hidden');
+            mainContent.classList.toggle('sidebar-hidden');
+            if (dashboardSection) {
+                dashboardSection.classList.toggle('sidebar-hidden');
+            }
+            if (statsSection) {
+                statsSection.classList.toggle('sidebar-hidden');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
 
 {% include "core/partials/_footer.html" %}
