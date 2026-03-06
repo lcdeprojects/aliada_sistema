@@ -4,19 +4,24 @@
 
 {% block content %}
 <section class="dashboard-section">
-    <div class="welcome-section">
-    </div>
 
     <div class="patients-summary">
-        <div class="summary-card">
+        <div class="summary-card-patients">
             <i class="material-icons" style="font-size: 2em; color: var(--primary-color);">people</i>
-            <h3>{{ patients.count }} Pacientes</h3>
-            <p>Total de pacientes registrados no sistema</p>
+            <h3>{{ page_obj.paginator.count }} Pacientes</h3>
         </div>
     </div>
 
+    <form method="get" class="search-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar por nome...">
+        <button class="feature-link" type="submit">Pesquisar</button>
+        {% if query %}
+            <a href="{% url 'all_patients' %}">Limpar</a>
+        {% endif %}
+    </form>
+
     <div class="all-patients-list">
-        {% for patient in patients %}
+        {% for patient in page_obj %}
             <div class="patient-item">
                 <div class="patient-info">
                     <div class="patient-name">
@@ -41,5 +46,6 @@
             </div>
         {% endfor %}
     </div>
+    {% include "core/partials/_pagination.html" %}
 </section>
 {% endblock %}

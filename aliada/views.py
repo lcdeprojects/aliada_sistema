@@ -66,7 +66,7 @@ def record_list(request):
             models.Q(first_name__icontains=query) | models.Q(last_name__icontains=query)
         )
     records = records.order_by(sort_by)
-    paginator = Paginator(records, 10)  # Show 10 records per page
+    paginator = Paginator(records, 6)  # Show 10 records per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'core/patient/record_list.html', {'page_obj': page_obj, 'query': query, 'sort_by': sort_by})
@@ -174,12 +174,16 @@ def balance_create(request):
         form = BalanceForm(request.POST)
         if form.is_valid():
             balance = form.save(commit=False)
+            patient_id = request.POST.get('patient')
+            if patient_id:
+                balance.patient_id = int(patient_id)
             balance.created_by = request.user
             balance.save()
             return redirect('balance_list')
     else:
         form = BalanceForm()
-    return render(request, 'core/balance/balance_form.html', {'form': form, 'title': 'Create Balance'})
+    patients = PatientRecord.objects.all()
+    return render(request, 'core/balance/balance_form.html', {'form': form, 'title': 'Criar Registro Financeiro', 'patients': patients})
 
 @group_required('Administrador')
 def balance_list(request):
@@ -206,12 +210,16 @@ def balance_update(request, pk):
         form = BalanceForm(request.POST, instance=balance)
         if form.is_valid():
             balance = form.save(commit=False)
+            patient_id = request.POST.get('patient')
+            if patient_id:
+                balance.patient_id = int(patient_id)
             balance.updated_by = request.user
             balance.save()
             return redirect('balance_detail', pk=balance.pk)
     else:
         form = BalanceForm(instance=balance)
-    return render(request, 'core/balance/balance_form.html', {'form': form, 'title': 'Update Balance'})
+    patients = PatientRecord.objects.all()
+    return render(request, 'core/balance/balance_form.html', {'form': form, 'title': 'Update Balance', 'patients': patients})
 
 @group_required('Administrador')
 def balance_delete(request, pk):
@@ -230,9 +238,18 @@ def sum_balances(request):
 
 @group_required('Administrador', 'Secretaria')
 def all_patients(request):
-    patients = PatientRecord.objects.all().order_by('first_name', 'last_name')
-    return render(request, 'core/all_patients.html', {'patients': patients})
-
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', 'first_name')  # Default sort by first_name
+    records = PatientRecord.objects.all()
+    if query:
+        records = records.filter(
+            models.Q(first_name__icontains=query) | models.Q(last_name__icontains=query)
+        )
+    records = records.order_by(sort_by)
+    paginator = Paginator(records, 4)  # Show 10 records per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'core/all_patients.html', {'page_obj': page_obj, 'query': query, 'sort_by': sort_by})
 
 @group_required('Administrador', 'Secretaria')
 def active_plan(request):

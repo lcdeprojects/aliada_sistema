@@ -21,7 +21,11 @@ class PatientRecord(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Patient: {self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}"
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class MedicalRecord(models.Model):
@@ -39,7 +43,7 @@ class MedicalRecord(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Record for {self.patient.first_name} {self.patient.last_name} on {self.date}"
+        return f"Registro para {self.patient.first_name} {self.patient.last_name} em {self.date}"
 
 class Balance(models.Model):
     patient = models.ForeignKey(PatientRecord, on_delete=models.CASCADE, related_name='balances')
@@ -61,7 +65,7 @@ class Balance(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Balance for {self.patient.first_name} {self.patient.last_name} on {self.date}"
+        return f"Registro {self.patient.first_name} {self.patient.last_name} em {self.date}"
     
     @property
     def is_expiring_soon(self):

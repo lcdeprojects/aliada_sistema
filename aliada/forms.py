@@ -22,7 +22,11 @@ class MedicalRecordForm(forms.ModelForm):
         model = MedicalRecord
         fields = ['patient', 'date', 'description', 'appointment_feedback', 'image_medical', 'weight', 'height', 'document']
         widgets = {
+            'patient': forms.Select(attrs={}),
             'date': forms.DateInput(attrs={'type': 'date'}),
+        }
+        labels = {
+            'patient': 'Paciente',
         }
 
 
@@ -38,8 +42,11 @@ class UserRegistrationForm(UserCreationForm):
 class BalanceForm(forms.ModelForm):
     class Meta:
         model = Balance
-        fields = ['patient', 'date', 'type', 'amount', 'description', 'expiration_date']
+        fields = ['date', 'type', 'amount', 'description', 'expiration_date']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'expiration_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+        labels = {
+            'patient': 'Paciente',
         }

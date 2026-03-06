@@ -331,15 +331,22 @@ footer {
 
 /* Dashboard Section */
 .dashboard-section {
-    position: relative;
+    position: relative ;
+    width: calc(100% - var(--sidebar-width));
     background: white;
     left: calc(var(--sidebar-width) - 10px);
-    overflow-y: auto;
+    overflow: hidden;
     transition: left 0.5s ease, width 0.5s ease;
+    min-height: 100vh;
 }
 
 .dashboard-section.sidebar-hidden {
     left: var(--sidebar-width);
+}
+
+/* Hide scrollbar for dashboard-section */
+.dashboard-section::-webkit-scrollbar {
+    display: none;
 }
 
 /* Hero Section */
@@ -480,7 +487,7 @@ footer {
 
 .feature-card {
     background: white;
-    padding: 40px 30px;
+    padding: 15px 25px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     text-align: center;
@@ -1010,6 +1017,8 @@ footer {
     font-size: 1em;
 }
 
+
+
 .all-patients-list {
     margin-top: 30px;
     width: 100%;
@@ -1025,8 +1034,10 @@ footer {
 .patient-item {
     background: white;
     border-radius: var(--border-radius);
-    padding: 25px;
-    margin-bottom: 20px;
+    padding: 15px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     box-shadow: var(--box-shadow);
     display: flex;
     justify-content: space-between;
@@ -1444,3 +1455,54 @@ footer {
         display: none; /* Hide toggle on mobile since sidebar is static */
     }
 }
+
+/* Modern Table */
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+    background-color: white;
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.modern-table th, .modern-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modern-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.modern-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.table-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.table-actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.detail-link { background-color: var(--secondary-color); color: white; }
+.detail-link:hover { background-color: #4caf50; }
+
+.edit-link { background-color: var(--accent-color); color: white; }
+.edit-link:hover { background-color: #ff9800; }
+
+.delete-link { background-color: var(--danger-color); color: white; }
+.delete-link:hover { background-color: #f44336; }

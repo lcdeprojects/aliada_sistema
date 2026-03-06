@@ -22,34 +22,34 @@
                 <button style="text-align: center;" type="button" class="create-link" onclick="window.location.href='{% url 'record_create' %}'">Adicionar Novo Paciente</button>
             </div>
             </center>
-            <div class="record-cards">
-                {% for record in page_obj %}
-                    <div class="record-card">
-                        <div class="card-header">
-                            <h3><a href="{% url 'patient_detail' pk=record.pk %}">{{ record.first_name }} {{ record.last_name }}</a></h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="info-item">
-                                <i class="material-icons">person</i>
-                                <span><strong>Idade:</strong> {{ record.age|default:"N/A" }} anos</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="material-icons">monitor_weight</i>
-                                <span><strong>Peso:</strong> {{ record.weight|default:"N/A" }} kg</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="material-icons">height</i>
-                                <span><strong>Altura:</strong> {{ record.height|default:"N/A" }} cm</span>
-                            </div>
-                        </div>
-                        <div class="card-actions link-colors">
-                            <button type="button" class="detail-link" onclick="window.location.href='{% url 'patient_detail' pk=record.pk %}'">Detalhes</button>
-                            <button type="button" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=record.pk %}'">Editar</button>
-                            <button type="button" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=record.pk %}'">Excluir</button>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Peso</th>
+                        <th>Altura</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in page_obj %}
+                        <tr>
+                            <td><a href="{% url 'patient_detail' pk=record.pk %}">{{ record.first_name }} {{ record.last_name }}</a></td>
+                            <td>{{ record.age|default:"N/A" }} anos</td>
+                            <td>{{ record.weight|default:"N/A" }} kg</td>
+                            <td>{{ record.height|default:"N/A" }} cm</td>
+                            <td>
+                                <div class="table-actions">
+                                    <button type="button" class="detail-link" onclick="window.location.href='{% url 'patient_detail' pk=record.pk %}'">Detalhes</button>
+                                    <button type="button" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=record.pk %}'">Editar</button>
+                                    <button type="button" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=record.pk %}'">Excluir</button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% if not page_obj %}
                 <div class="no-results">
             <i class="material-icons" style="font-size: 4em; color: var(--gray-color); margin-bottom: 20px;">inbox</i>
