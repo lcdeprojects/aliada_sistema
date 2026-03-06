@@ -8,10 +8,10 @@
             <h2 class="section-title">Gerenciamento de Pacientes</h2>
             <form method="get" class="search-form">
                 <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar por nome...">
-                <button type="submit">Pesquisar</button>
+                <button class="feature-link"     type="submit">Pesquisar</button>
                 {% if query %}
                     <a href="{% url 'record_list' %}">Limpar</a>
-                    <button style="text-align: center;" type="button" class="create-link" onclick="window.location.href='{% url 'record_create' %}'">Adicionar Novo Paciente</button>
+                    <button style="text-align: center;" type="button" class="feature-link" onclick="window.location.href='{% url 'record_create' %}'">Adicionar Novo Paciente</button>
                 {% endif %}
             </form>
             <center>

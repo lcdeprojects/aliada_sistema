@@ -3,11 +3,15 @@
 {% block title %}Excluir Saldo - Sistema Aliada{% endblock %}
 
 {% block content %}
+    <center>
     <h1>Excluir Saldo</h1>
     <p>Tem certeza de que deseja excluir "{{ balance }}"?</p>
+    </center>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="delete-link">Sim, Excluir</button>
+        <button class="feature-link" type="submit">Sim, Excluir</button>
     </form>
+    <center>
     <a href="{% url 'balance_detail' pk=balance.pk %}">Cancelar</a>
+    </center>
 {% endblock %}

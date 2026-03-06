@@ -9,7 +9,7 @@
             <form method="get" class="search-form">
                 <input type="date" name="q" value="{{ query }}" placeholder="Pesquisar por data...">
                 <input type="date" name="q2" value="{{ query2 }}" placeholder="Pesquisar por data...">
-                <button type="submit">Pesquisar</button>
+                <button class = "feature-link"type="submit">Pesquisar</button>
                 {% if query or query2 %}
                     <a href="{% url 'balance_list' %}">Limpar</a>
                 {% endif %}
@@ -38,7 +38,7 @@
                 <td>{{ balance.type }}</td>
                 <td>
                     <div class="actions">
-                        <button type="button" onclick="window.location.href='{% url 'balance_detail' pk=balance.pk %}'">Detalhes</button>
+                        <button class="feature-link" type="button" onclick="window.location.href='{% url 'balance_detail' pk=balance.pk %}'">Detalhes</button>
                     </div>
                 </td>
             </tr>
