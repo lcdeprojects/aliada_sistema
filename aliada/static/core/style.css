@@ -324,14 +324,13 @@ footer {
 .dashboard-section {
     position: relative;
     background: white;
-    left: 80px;
+    left: calc(var(--sidebar-width) - 120px);
     overflow-y: auto;
-    transition: left 0.3s ease, width 0.3s ease;
+    transition: left 0.5s ease, width 0.5s ease;
 }
 
 .dashboard-section.sidebar-hidden {
-    width: 100vw;
-    left: 0;
+    left: var(--sidebar-width);
 }
 
 /* Hero Section */
