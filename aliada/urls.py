@@ -28,4 +28,5 @@ urlpatterns = [
     path('balances/create/', views.balance_create, name='balance_create'),
     path('balances/<int:pk>/update/', views.balance_update, name='balance_update'),
     path('balances/<int:pk>/delete/', views.balance_delete, name='balance_delete'),
+    path('balances/active-plan/', views.active_plan, name='active_plan'),
 ]

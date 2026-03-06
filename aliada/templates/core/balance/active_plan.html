@@ -1,0 +1,60 @@
+{% extends "core/base.html" %}
+
+{% block title %}Saldos - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <div class="welcome-section">
+        <p>Gerenciamento de Saldos</p>
+    </div>
+    <form method="get" class="search-form">
+        <select name="status">
+            <option value="active" {% if status == 'active' %}selected{% endif %}>Ativo</option>
+            <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Inativo</option>
+            <option value="expiring" {% if status == 'expiring' %}selected{% endif %}>Expirando</option>
+        </select>
+        <button type="submit">Filtrar</button>
+        {% if status != 'active' %}
+            <a href="?status=active">Limpar</a>
+        {% endif %}
+    </form>
+
+
+    <table class="balance-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Tipo</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for balance in balances %}
+            <tr>
+                <td><a href="{% url 'balance_detail' pk=balance.pk %}">{{ balance.patient.first_name }} {{ balance.patient.last_name }}</a></td>
+                <td>{{ balance.date|date:"d/m/Y" }}</td>
+                <td>R$ {{ balance.amount }}</td>
+                <td>{{ balance.type }}</td>
+                <td>
+                    {% if balance.active %}
+                        {% if balance.is_expiring_soon %}
+                                <span class="badge badge-warning">Expira em breve</span>
+                            {% else %}
+                                <span class="badge badge-success">Ativo</span>
+                            {% endif %}
+                    {% else %}
+                        <span class="badge badge-danger">Inativo</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if not balances %}
+        <div class="no-results">
+            <i class="material-icons" style="font-size: 4em; color: var(--gray-color); margin-bottom: 20px;">inbox</i>
+            <h2>Nenhum saldo encontrado</h2>
+        </div>
+    {% endif %}
+{% endblock %}

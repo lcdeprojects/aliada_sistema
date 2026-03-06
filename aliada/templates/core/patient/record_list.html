@@ -3,51 +3,53 @@
 {% block title %}Pacientes - Sistema Aliada{% endblock %}
 
 {% block content %}
-    <div class="welcome-section">
-        <p>Gerenciamento de Pacientes</p>
-    </div>
-    <form method="get" class="search-form">
-        <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar por nome...">
-        <button type="submit">Pesquisar</button>
-        {% if query %}
-            <a href="{% url 'record_list' %}">Limpar</a>
-        {% endif %}
-    </form>
-
-    <div class="button-container-1">
-        <button style="text-align: center;" type="button" size="small" class="create-link" onclick="window.location.href='{% url 'record_create' %}'">Adicionar Novo Paciente</button>
-    </div>
-
-    <div class="record-cards">
-        {% for record in page_obj %}
-            <div class="record-card">
-                <div class="card-header">
-                    <h3><a href="{% url 'patient_detail' pk=record.pk %}">{{ record.first_name }} {{ record.last_name }}</a></h3>
-                </div>
-                <div class="card-body">
-                    <div class="info-item">
-                        <i class="material-icons">person</i>
-                        <span><strong>Idade:</strong> {{ record.age|default:"N/A" }} anos</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="material-icons">monitor_weight</i>
-                        <span><strong>Peso:</strong> {{ record.weight|default:"N/A" }} kg</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="material-icons">height</i>
-                        <span><strong>Altura:</strong> {{ record.height|default:"N/A" }} cm</span>
-                    </div>
-                </div>
-                <div class="card-actions link-colors">
-                    <button type="button" class="detail-link" onclick="window.location.href='{% url 'patient_detail' pk=record.pk %}'">Detalhes</button>
-                    <button type="button" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=record.pk %}'">Editar</button>
-                    <button type="button" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=record.pk %}'">Excluir</button>
-                </div>
+    <section class="dashboard-section">
+        <div class="container">
+            <h2 class="section-title">Gerenciamento de Pacientes</h2>
+            <form method="get" class="search-form">
+                <input type="text" name="q" value="{{ query }}" placeholder="Pesquisar por nome...">
+                <button type="submit">Pesquisar</button>
+                {% if query %}
+                    <a href="{% url 'record_list' %}">Limpar</a>
+                    <button style="text-align: center;" type="button" class="create-link" onclick="window.location.href='{% url 'record_create' %}'">Adicionar Novo Paciente</button>
+                {% endif %}
+            </form>
+            <center>
+            <div class="button-container-1" style="text-align: center;">
+                
+                <button style="text-align: center;" type="button" class="create-link" onclick="window.location.href='{% url 'record_create' %}'">Adicionar Novo Paciente</button>
             </div>
-        {% endfor %}
-    </div>
-    {% if not page_obj %}
-        <div class="no-results">
+            </center>
+            <div class="record-cards">
+                {% for record in page_obj %}
+                    <div class="record-card">
+                        <div class="card-header">
+                            <h3><a href="{% url 'patient_detail' pk=record.pk %}">{{ record.first_name }} {{ record.last_name }}</a></h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-item">
+                                <i class="material-icons">person</i>
+                                <span><strong>Idade:</strong> {{ record.age|default:"N/A" }} anos</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="material-icons">monitor_weight</i>
+                                <span><strong>Peso:</strong> {{ record.weight|default:"N/A" }} kg</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="material-icons">height</i>
+                                <span><strong>Altura:</strong> {{ record.height|default:"N/A" }} cm</span>
+                            </div>
+                        </div>
+                        <div class="card-actions link-colors">
+                            <button type="button" class="detail-link" onclick="window.location.href='{% url 'patient_detail' pk=record.pk %}'">Detalhes</button>
+                            <button type="button" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=record.pk %}'">Editar</button>
+                            <button type="button" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=record.pk %}'">Excluir</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if not page_obj %}
+                <div class="no-results">
             <i class="material-icons" style="font-size: 4em; color: var(--gray-color); margin-bottom: 20px;">inbox</i>
             <h2>Nenhum paciente encontrado</h2>
             <p>Não há pacientes registrados no sistema.</p>

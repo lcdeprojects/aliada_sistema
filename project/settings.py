@@ -120,6 +120,7 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
+    BASE_DIR / 'aliada' / 'static',
 ]
 
 MEDIA_URL = '/media/'

@@ -17,6 +17,34 @@
                     <p><strong>Altura:</strong> {{ patient.height|default:"N/A" }} cm</p>
                 </div>
                 <div class="record-section">
+                    <h3>Informações do Plano</h3>
+                    {% if patient.balances.exists %}
+                    {% for balance in patient.balances.all %}
+                    {% if balance.active %}
+                        <div class="record-section">
+                            <h4>Plano</h4>
+                            {% if balance.is_expiring_soon %}
+                                <span class="badge badge-warning">Expira em breve</span>
+                            {% else %}
+                                <span class="badge badge-success">Ativo</span>
+                            {% endif %}
+                            <p><strong>Tipo:</strong> {{ balance.type }}</p>
+                            <p><strong>Validade:</strong> {{ balance.expiration_date | date:"d/m/Y" }}</p>
+                        </div>
+                    {% else %}
+                        <div class="record-section">
+                            <h4>Plano Inativo</h4>
+                            <span class="badge badge-danger">Inativo</span>
+                            <p><strong>Tipo:</strong> {{ balance.type }}</p>
+                            <p><strong>Valor:</strong> R$ {{ balance.amount }}</p>
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                        <p>Nenhum saldo associado.</p>
+                    {% endif %}
+                </div>
+                <div class="record-section">
                     <h3>Consultas Médicas</h3>
                     {% if medical_records %}
                         <ul>
@@ -30,15 +58,15 @@
                         <p>Nenhum registro médico encontrado.</p>
                     {% endif %}
                     <div class="record-actions">
-                        <button type="button" size="small" class="register-link" onclick="window.location.href='{% url 'medical_record_create' patient_pk=patient.pk %}'">Adicionar Consulta Médica</button>
-                        <button type="button" size="small" class="history-link" onclick="window.location.href='{% url 'patient_history' pk=patient.pk %}'">Ver Histórico Completo</button>
+                        <button type="button" class="register-link" onclick="window.location.href='{% url 'medical_record_create' patient_pk=patient.pk %}'">Adicionar Consulta Médica</button>
+                        <button type="button" class="history-link" onclick="window.location.href='{% url 'patient_history' pk=patient.pk %}'">Ver Histórico Completo</button>
                     </div>
                 </div>
             </div>
             <div class="record-actions">
-                <button type="button" size="small" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=patient.pk %}'">Editar Paciente</button>
-                <button type="button" size="small" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=patient.pk %}'">Excluir Paciente</button>
-                <button type="button" size="small" class="back-link" onclick="window.location.href='{% url 'record_list' %}'">Voltar à Lista</button>
+                <button type="button" class="edit-link" onclick="window.location.href='{% url 'record_update' pk=patient.pk %}'">Editar Paciente</button>
+                <button type="button" class="delete-link" onclick="window.location.href='{% url 'record_delete' pk=patient.pk %}'">Excluir Paciente</button>
+                <button type="button" class="back-link" onclick="window.location.href='{% url 'record_list' %}'">Voltar à Lista</button>
             </div>
         </div>
     </div>

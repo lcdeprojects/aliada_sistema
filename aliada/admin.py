@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import PatientRecord, MedicalRecord
+from .models import PatientRecord, MedicalRecord,Balance
 
 @admin.register(PatientRecord)
 class PatientRecordAdmin(admin.ModelAdmin):
@@ -16,3 +16,8 @@ class MedicalRecordAdmin(admin.ModelAdmin):
     search_fields = ['patient__first_name', 'patient__last_name', 'description']
     list_filter = ['date', 'created_at']
 
+@admin.register(Balance)
+class BalanceAdmin(admin.ModelAdmin):
+    list_display = ['patient', 'date', 'type', 'amount', 'description', 'created_at']
+    search_fields = ['patient__first_name', 'patient__last_name', 'type', 'description']
+    list_filter = ['date', 'type', 'created_at']

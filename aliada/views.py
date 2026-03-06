@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
+from datetime import date, timedelta
 
 from .forms import (
     BalanceForm,
@@ -231,3 +232,23 @@ def sum_balances(request):
 def all_patients(request):
     patients = PatientRecord.objects.all().order_by('first_name', 'last_name')
     return render(request, 'core/all_patients.html', {'patients': patients})
+
+
+@group_required('Administrador', 'Secretaria')
+def active_plan(request):
+    status = request.GET.get('status', 'active')
+    balances = Balance.objects.all()
+    if status == 'active':
+        balances = balances.filter(active=True)
+    elif status == 'inactive':
+        balances = balances.filter(active=False)
+    elif status == 'expiring':
+        today = date.today()
+        end_date = today + timedelta(days=10)
+        balances = balances.filter(
+            expiration_date__gte=today,
+            expiration_date__lte=end_date,
+            active=True
+        )
+    balances = balances.order_by('-date')
+    return render(request, 'core/balance/active_plan.html', {'balances': balances, 'status': status})

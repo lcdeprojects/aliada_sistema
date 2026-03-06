@@ -1,43 +1,120 @@
 {% extends "core/base.html" %}
-
+{% load static %}
 {% block title %}Início - Aliada{% endblock %}
 
 {% block content %}
-    <section class="welcome-section">
-        <h1>Bem-vindo ao Sistema de Gestão Aliada</h1>
-    </section>
+    <!-- Hero Section -->
+
     {% if user.is_authenticated %}
-        <section class="dashboard">
-            <h2>Olá, {{ user.username }}!</h2>
-            <p>Bem-vindo de volta ao seu painel. Gerencie registros de pacientes com facilidade.</p>
-            <div class="action-cards">
-                <div class="card">
-                    <h3>Consultas Médicas</h3>
-                    <p>Visualize, crie e atualize registros de consultas médicas.</p>
-                    <a href="{% url 'record_list' %}" class="card-link">Ir para Registros</a>
+
+        <!-- Dashboard Section -->
+        <section class="dashboard-section">
+            <div class="container">
+                <center>
+                <img src="{% static 'core/images/aliada3.png' %}" alt="Sistema Aliada" >
+                </center>
+                <h2 class="section-title">Olá, {{ user.first_name|default:user.username }}!</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="material-icons">local_hospital</i>
+                        </div>
+                        <h3>Consultas Médicas</h3>
+                        <p>Visualize, crie e atualize registros de consultas médicas com facilidade.</p>
+                        <a href="{% url 'record_list' %}" class="feature-link">Gerenciar Consultas</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="material-icons">person_search</i>
+                        </div>
+                        <h3>Pacientes</h3>
+                        <p>Acesse detalhes completos dos pacientes e histórico médico.</p>
+                        <a href="{% url 'all_patients' %}" class="feature-link">Ver Pacientes</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="material-icons">person_add</i>
+                        </div>
+                        <h3>Novo Paciente</h3>
+                        <p>Registre novos pacientes no sistema de forma rápida e intuitiva.</p>
+                        <a href="{% url 'record_create' %}" class="feature-link">Cadastrar Paciente</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="material-icons">account_balance</i>
+                        </div>
+                        <h3>Balanços Financeiros</h3>
+                        <p>Gerencie balanços e pagamentos de forma organizada.</p>
+                        <a href="{% url 'balance_list' %}" class="feature-link">Ver Balanços</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="material-icons">event_available</i>
+                        </div>
+                        <h3>Planos Ativos</h3>
+                        <p>Monitore planos ativos e vencimentos.</p>
+                        <a href="{% url 'active_plan' %}" class="feature-link">Gerenciar Planos</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="material-icons">settings</i>
+                        </div>
+                        <h3>Configurações</h3>
+                        <p>Acesse configurações do sistema e preferências.</p>
+                        <a href="#" class="feature-link">Em Breve</a>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Detalhes dos Pacientes</h3>
-                    <p>Visualize detalhes dos pacientes.</p>
-                    <a href="{% url 'all_patients' %}" class="card-link">Ver Detalhes</a>
-                </div>
-                <div class="card">
-                    <h3>Adicionar Novo Paciente</h3>
-                    <p>Crie um novo registro médico para um paciente.</p>
-                    <a href="{% url 'record_create' %}" class="card-link">Criar Registro</a>
-                </div>
-                <div class="card">
-                    <h3>Gerenciar Balanços</h3>
-                    <p>Visualize, crie e atualize balanços financeiros.</p>
-                    <a href="{% url 'balance_list' %}" class="card-link">Ir para Balanços</a>
+            </div>
+        </section>
+
+         <section class="stats-section">
+            <div class="container">
+                <h2 class="section-title">Visão Geral</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="material-icons">people</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ patients_count }}</h3>
+                            <p>Pacientes Cadastrados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="material-icons">medical_services</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ records_count }}</h3>
+                            <p>Registros Médicos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="material-icons">today</i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ today_records }}</h3>
+                            <p>Consultas Hoje</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     {% else %}
-        <section class="login-section">
-            <h2>Por Favor, Faça Login</h2>
-            <p>Acesse o sistema para gerenciar registros médicos.</p>
-            <a href="{% url 'login' %}" class="login-link">Entrar</a>
+        <!-- Login Prompt Section -->
+        <section class="login-prompt-section">
+            <div class="container">
+                <div class="login-content">
+                    <h2>Acesse o Sistema</h2>
+                    <p>Faça login para gerenciar registros médicos, pacientes e balanços financeiros.</p>
+                    <div class="login-actions">
+                        <a href="{% url 'login' %}" class="primary-button">Entrar</a>
+                        <span class="divider">ou</span>
+                        <a href="{% url 'register' %}" class="secondary-button">Criar Conta</a>
+                    </div>
+                </div>
+            </div>
         </section>
     {% endif %}
 {% endblock %}

@@ -38,7 +38,8 @@ class UserRegistrationForm(UserCreationForm):
 class BalanceForm(forms.ModelForm):
     class Meta:
         model = Balance
-        fields = ['patient', 'date', 'type', 'amount', 'description']
+        fields = ['patient', 'date', 'type', 'amount', 'description', 'expiration_date']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
+            'expiration_date': forms.DateInput(attrs={'type': 'date'}),
         }

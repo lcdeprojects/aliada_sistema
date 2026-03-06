@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+
+{% block title %}Detalhes da Consulta - Sistema Aliada{% endblock %}
+
+{% block content %}
+    <section class="dashboard-section">
+        <div class="container">
+            <h2 class="section-title">Detalhes da Consulta</h2>
+            <div class="record-container">
+                <div class="record-card">
+                    <div class="record-header">
+                        <h3>{{ record.patient.name }} - {{ record.date | date:"d/m/Y" }} --- Atendido por {{record.created_by.first_name }} {{ record.created_by.last_name }}</h3>
+                    </div>
+                    <div class="record-body">
+                        <div class="record-section">
+                            <h4>Consulta</h4>
+                            <p>{{ record.description }}</p>
+                        </div>
+                        {% if record.appointment_feedback %}
+                            <div class="record-section">
+                                <h4>Comentários da Consulta</h4>
+                                <p>{{ record.appointment_feedback }}</p>
+                            </div>
+                        {% endif %}
+                        {% if record.weight %}
+                            <div class="record-section">
+                                <h4>Dados do Paciente</h4>
+                                <p>Peso: {{ record.weight|floatformat:".0f" }} kg</p>
+                                <p>Altura: {{ record.height|floatformat:".0f" }} cm</p>
+                            </div>
+                        {% endif %}
+                        {% if record.image_medical %}
+                            <div class="record-section">
+                                <h4>Imagem Médica</h4>
+                                <img src="{{ record.image_medical.url }}" alt="Imagem Médica" class="record-image">
+                            </div>
+                        {% endif %}
+                        {% if record.document %}
+                            <div class="record-section">
+                                <h4>Documentos</h4>
+                                <ul>
+                                    <li><a href="{{ record.document.url }}" target="_blank">{{ record.document.name.split|last }}</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="record-actions">
+                        <button type="button" class="edit-link" onclick="window.location.href='{% url 'medical_record_update' pk=record.pk %}'">Editar Consulta</button>
+                        <button type="button" class="delete-link" onclick="window.location.href='{% url 'medical_record_delete' pk=record.pk %}'">Excluir Consulta</button>
+                        <button type="button" class="back-link" onclick="window.location.href='{% url 'patient_detail' pk=record.patient.pk %}'">Voltar ao Paciente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

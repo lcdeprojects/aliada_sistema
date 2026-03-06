@@ -3,23 +3,23 @@
 {% block title %}Saldos - Sistema Aliada{% endblock %}
 
 {% block content %}
-    <div class="welcome-section">
-        <p>Gerenciamento de Saldos</p>
-    </div>
-    <form method="get" class="search-form">
-        <input type="date" name="q" value="{{ query }}" placeholder="Pesquisar por data...">
-        <input type="date" name="q2" value="{{ query2 }}" placeholder="Pesquisar por data...">
-        <button type="submit">Pesquisar</button>
-        {% if query or query2 %}
-            <a href="{% url 'balance_list' %}">Limpar</a>
-        {% endif %}
-    </form>
+    <section class="dashboard-section">
+        <div class="container">
+            <h2 class="section-title">Gerenciamento de Saldos</h2>
+            <form method="get" class="search-form">
+                <input type="date" name="q" value="{{ query }}" placeholder="Pesquisar por data...">
+                <input type="date" name="q2" value="{{ query2 }}" placeholder="Pesquisar por data...">
+                <button type="submit">Pesquisar</button>
+                {% if query or query2 %}
+                    <a href="{% url 'balance_list' %}">Limpar</a>
+                {% endif %}
+            </form>
 
-    <div class="button-container-1">
-        <button style="text-align: center;" type="button" size="small" class="create-link" onclick="window.location.href='{% url 'balance_create' %}'">Adicionar Novo Saldo</button>
-    </div>
+            <div class="button-container-1">
+                <button style="text-align: center;" type="button" class="create-link" onclick="window.location.href='{% url 'balance_create' %}'">Adicionar Novo Saldo</button>
+            </div>
 
-    <table class="balance-table">
+            <table class="balance-table">
         <thead>
             <tr>
                 <th>Name</th>
@@ -55,4 +55,6 @@
             <h2>Nenhum saldo encontrado</h2>
         </div>
     {% endif %}
+        </div>
+    </section>
 {% endblock %}
