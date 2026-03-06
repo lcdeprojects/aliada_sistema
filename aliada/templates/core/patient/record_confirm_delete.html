@@ -3,6 +3,9 @@
 {% block title %}Excluir Paciente - Sistema Aliada{% endblock %}
 
 {% block content %}
+
+<center>
+<section class="dashboard-section">
     <h1>Excluir Paciente</h1>
     <p>Tem certeza de que deseja excluir "{{ record.name }}"?</p>
     <form method="post">
@@ -10,4 +13,6 @@
         <button type="submit" class="delete-link">Sim, Excluir</button>
     </form>
     <a href="{% url 'record_detail' pk=record.pk %}">Cancelar</a>
+</section>
+</center>
 {% endblock %}

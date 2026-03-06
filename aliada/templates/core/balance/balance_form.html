@@ -3,6 +3,7 @@
 {% block title %}{{ title }} - Sistema Aliada{% endblock %}
 
 {% block content %}
+<section class="dashboard-section">
     <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
         <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'balance_list' %}'">chevron_left</i>
         <h1>Criar Registro Financeiro</h1>
@@ -50,4 +51,5 @@
     <center>
     <a href="{% url 'balance_list' %}">Voltar à Lista</a>
     </center>
+</section>
 {% endblock %}

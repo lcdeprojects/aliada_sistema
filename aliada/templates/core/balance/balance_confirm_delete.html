@@ -3,6 +3,7 @@
 {% block title %}Excluir Saldo - Sistema Aliada{% endblock %}
 
 {% block content %}
+<section class="dashboard-section">
     <center>
     <h1>Excluir Saldo</h1>
     <p>Tem certeza de que deseja excluir "{{ balance }}"?</p>
@@ -14,4 +15,5 @@
     <center>
     <a href="{% url 'balance_detail' pk=balance.pk %}">Cancelar</a>
     </center>
+</section>
 {% endblock %}

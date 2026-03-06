@@ -37,7 +37,9 @@
     <div class="sidebar-footer">
         {% if user.is_authenticated %}
         <span class="sidebar-user">Olá, {{ user.first_name|default:user.username }}</span>
-        <a href="{% url 'logout' %}" class="sidebar-logout">Sair</a>
+        <br>
+        <br>
+        <a href="{% url 'logout' %}" class="sidebar-logout" style="font-size: 12px;">Sair</a>
         {% else %}
         <a href="{% url 'login' %}" class="sidebar-login">Entrar</a>
         {% endif %}

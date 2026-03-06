@@ -3,7 +3,10 @@
 {% block title %}Entrar - Aliada{% endblock %}
 
 {% block content %}
+<section class="dashboard-section">
+    <center>
     <h1>Entrar</h1>
+    </center>
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -21,4 +24,5 @@
     </form>
     <center>
     </center>
+</section>
 {% endblock %}

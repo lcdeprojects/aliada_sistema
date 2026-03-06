@@ -100,18 +100,21 @@
         </section>
     {% else %}
         <!-- Login Prompt Section -->
-        <section class="login-prompt-section">
+
+        <section class="dashboard-section">
+            <center>
             <div class="container">
                 <div class="login-content">
                     <h2>Acesse o Sistema</h2>
                     <p>Faça login para gerenciar registros médicos, pacientes e balanços financeiros.</p>
                     <div class="login-actions">
-                        <a href="{% url 'login' %}" class="primary-button">Entrar</a>
-                        <span class="divider">ou</span>
-                        <a href="{% url 'register' %}" class="secondary-button">Criar Conta</a>
+                        <a href="{% url 'login' %}" class="feature-link">Entrar</a>
+                        <br>
+                        
                     </div>
                 </div>
             </div>
+            </center>
         </section>
     {% endif %}
 {% endblock %}

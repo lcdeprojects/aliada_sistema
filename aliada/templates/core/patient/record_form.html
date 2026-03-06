@@ -3,6 +3,7 @@
 {% block title %}{{ title }} - Sistema Aliada{% endblock %}
 
 {% block content %}
+<section class="dashboard-section">
     <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
         <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'record_list' %}'">chevron_left</i>
         <h1>Novo Paciente</h1>
@@ -20,7 +21,6 @@
         <div class="form-group">
             <label for="{{ form.last_name.id_for_label }}">Sobrenome:</label>
             <div class="input-group">
-                <span class="input-group-icon"><i class="material-icons">person</i></span>
                 {{ form.last_name }}
             </div>
         </div>
@@ -62,4 +62,5 @@
         <button type="submit">Salvar</button>
     </form>
     <a href="{% url 'record_list' %}">Voltar à Lista</a>
+</section>
 {% endblock %}

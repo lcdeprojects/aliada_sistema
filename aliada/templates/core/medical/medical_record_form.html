@@ -3,7 +3,10 @@
 {% block title %}{{ title }} - Sistema Aliada{% endblock %}
 
 {% block content %}
-    <h1>{{ title }}</h1>
+<section class="dashboard-section">
+    <center>
+    <h1>Nova Consulta</h1>
+    </center>
     <form method="post" enctype="multipart/form-data" id="record-form">
         {% csrf_token %}
         <div class="form-group">
@@ -15,7 +18,7 @@
                 <div class="form-group">
             <label for="{{ form.patient.id_for_label }}">Responsável:</label>
             <div class="input-group">
-                {{ user.first_name }} {{ user.last_name }}
+                {{ user.first_name }}
             </div>
         </div>
         <div class="form-group">
@@ -74,4 +77,5 @@
             </center>
         </p>
     </form>
+</section>
 {% endblock %}

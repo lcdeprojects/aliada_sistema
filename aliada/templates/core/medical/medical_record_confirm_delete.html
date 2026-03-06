@@ -3,6 +3,7 @@
 {% block title %}Excluir Registro Médico - Sistema Aliada{% endblock %}
 
 {% block content %}
+<section class="dashboard-section">
     <h1>Excluir Registro Médico</h1>
     <p>Tem certeza de que deseja excluir o registro de "{{ record.patient.first_name }} {{ record.patient.last_name }}" em {{ record.date }}?</p>
     <form method="post">
@@ -10,4 +11,5 @@
         <button type="submit" class="delete-link">Sim, Excluir</button>
     </form>
     <a href="{% url 'medical_record_detail' pk=record.pk %}">Cancelar</a>
+</section>
 {% endblock %}
