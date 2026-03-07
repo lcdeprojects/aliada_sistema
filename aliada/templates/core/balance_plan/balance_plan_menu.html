@@ -3,10 +3,12 @@
 {% block title %}Menu de Planos - Sistema Aliada{% endblock %}
 
 {% block content %}
+    <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+        <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'balance_plan_menu' %}'">chevron_left</i>
+        <h1>Gerenciamento de Planos</h1>
+    </header>
 <section class="dashboard-section">
-    <div class="section-header">
-        <h2><i class="material-icons" style="vertical-align: middle; margin-right: 10px;">account_balance</i>Gerenciamento de Planos</h2>
-    </div>
+
 
     <div class="menu-grid">
         <!-- List Plans -->
