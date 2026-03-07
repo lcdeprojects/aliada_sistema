@@ -26,9 +26,21 @@
                 </a>
             </li>
             <li class="sidebar-item">
+                <a href="{% url 'balance_export' %}" class="sidebar-link">
+                    <i class="material-icons">file_download</i>
+                    <span>Exportar Saldos</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
                 <a href="{% url 'active_plan' %}" class="sidebar-link">
                     <i class="material-icons">event_note</i>
                     <span>Planos</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'balance_plan_menu' %}" class="sidebar-link">
+                    <i class="material-icons">settings</i>
+                    <span>Configurações de Planos</span>
                 </a>
             </li>
             {% endif %}

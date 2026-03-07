@@ -48,6 +48,10 @@ class BalancePlan(models.Model):
     name = models.CharField(max_length=50)
     expiration_days = models.IntegerField()
     amount = models.FloatField()
+    medical = models.BooleanField(default=False)
+    nutrition = models.BooleanField(default=False)
+    percentage_medical = models.FloatField()
+    percentage_nutrition = models.FloatField()
     created_at = models.DateTimeField(default=datetime.now)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_balance_plans')
@@ -55,12 +59,22 @@ class BalancePlan(models.Model):
     
     def __str__(self):
         return self.name
+
+    def calculate_amount(self):
+        if self.medical:
+            return self.amount * self.percentage_medical / 100
+        elif self.nutrition:
+            return self.amount * self.percentage_nutrition / 100
+        else:
+            return self.amount
         
 class Balance(models.Model):
     patient = models.ForeignKey(PatientRecord, on_delete=models.CASCADE, related_name='balances')
     date = models.DateField()
     type = models.ForeignKey(BalancePlan, on_delete=models.CASCADE, related_name='balances')
     amount = models.FloatField(blank=True, null=True)
+    amount_medical = models.FloatField(blank=True, null=True)
+    amount_nutrition = models.FloatField(blank=True, null=True)
     expiration_date = models.DateField(default=None, null=True, blank=True)
     description = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_balances')
@@ -82,7 +96,8 @@ class Balance(models.Model):
     
     def save(self, *args, **kwargs):
         self.expiration_date = self.date + timedelta(days=self.type.expiration_days) 
-        self.amount = self.type.amount     
-       
+        self.amount = self.type.amount      
+        self.amount_medical = self.type.amount * self.type.percentage_medical / 100
+        self.amount_nutrition = self.type.amount * self.type.percentage_nutrition / 100
         super().save(*args, **kwargs)
 

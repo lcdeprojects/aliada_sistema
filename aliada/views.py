@@ -209,6 +209,127 @@ def balance_detail(request, pk):
     return render(request, 'core/balance/balance_detail.html', {'balance': balance})
 
 @group_required('Administrador')
+def balance_export(request):
+    """Export balances by date range to Excel or PDF"""
+    if request.method == 'POST':
+        date_from = request.POST.get('date_from')
+        date_to = request.POST.get('date_to')
+        export_format = request.POST.get('format')
+        
+        if not date_from or not date_to:
+            messages.error(request, 'Por favor, selecione as datas de início e fim.')
+            return redirect('balance_export')
+        
+        balances = Balance.objects.filter(date__range=[date_from, date_to]).order_by('date')
+        
+        if export_format == 'excel':
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, Alignment
+            from django.http import HttpResponse
+            
+            wb = Workbook()
+            ws = wb.active
+            ws.title = 'Balances'
+            
+            # Header
+            headers = ['ID', 'Paciente', 'Data', 'Plano', 'Valor', 'Valor Médico', 'Valor Nutrição', 'Descrição', 'Data Expiração', 'Ativo']
+            for col_num, header in enumerate(headers, 1):
+                cell = ws.cell(row=1, column=col_num)
+                cell.value = header
+                cell.font = Font(bold=True)
+                cell.alignment = Alignment(horizontal='center')
+            
+            # Data
+            for row_num, balance in enumerate(balances, 2):
+                ws.cell(row=row_num, column=1).value = balance.id
+                ws.cell(row=row_num, column=2).value = balance.patient.full_name if balance.patient else ''
+                ws.cell(row=row_num, column=3).value = balance.date.strftime('%d/%m/%Y')
+                ws.cell(row=row_num, column=4).value = balance.type.name if balance.type else ''
+                ws.cell(row=row_num, column=5).value = balance.amount
+                ws.cell(row=row_num, column=6).value = balance.amount_medical
+                ws.cell(row=row_num, column=7).value = balance.amount_nutrition
+                ws.cell(row=row_num, column=8).value = balance.description
+                ws.cell(row=row_num, column=9).value = balance.expiration_date.strftime('%d/%m/%Y') if balance.expiration_date else ''
+                ws.cell(row=row_num, column=10).value = 'Sim' if balance.active else 'Não'
+            
+            # Auto-adjust column widths
+            for column in ws.columns:
+                max_length = 0
+                column_letter = column[0].column_letter
+                for cell in column:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(str(cell.value))
+                    except:
+                        pass
+                adjusted_width = (max_length + 2)
+                ws.column_dimensions[column_letter].width = adjusted_width
+            
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename=balances_{date_from}_to_{date_to}.xlsx'
+            wb.save(response)
+            return response
+            
+        elif export_format == 'pdf':
+            from reportlab.lib import colors
+            from reportlab.lib.pagesizes import letter, A4
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.lib.styles import getSampleStyleSheet
+            from django.http import HttpResponse
+            from io import BytesIO
+            
+            buffer = BytesIO()
+            doc = SimpleDocTemplate(buffer, pagesize=A4)
+            elements = []
+            
+            styles = getSampleStyleSheet()
+            title = Paragraph(f"Relatório de Saldos - {date_from} a {date_to}", styles['Heading1'])
+            elements.append(title)
+            elements.append(Spacer(1, 12))
+            
+            data = [['ID', 'Paciente', 'Data', 'Plano', 'Valor', 'Valor Médico', 'Valor Nutrição', 'Descrição', 'Data Expiração', 'Ativo']]
+            
+            for balance in balances:
+                data.append([
+                    balance.id,
+                    balance.patient.full_name if balance.patient else '',
+                    balance.date.strftime('%d/%m/%Y'),
+                    balance.type.name if balance.type else '',
+                    f'R$ {balance.amount:.2f}',
+                    f'R$ {balance.amount_medical:.2f}',
+                    f'R$ {balance.amount_nutrition:.2f}',
+                    balance.description,
+                    balance.expiration_date.strftime('%d/%m/%Y') if balance.expiration_date else '',
+                    'Sim' if balance.active else 'Não'
+                ])
+            
+            table = Table(data)
+            style = TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 12),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ])
+            table.setStyle(style)
+            elements.append(table)
+            
+            doc.build(elements)
+            buffer.seek(0)
+            response = HttpResponse(buffer.read(), content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename=balances_{date_from}_to_{date_to}.pdf'
+            return response
+        
+        else:
+            messages.error(request, 'Formato de exportação inválido.')
+            return redirect('balance_export')
+    
+    return render(request, 'core/balance/balance_export.html')
+
+@group_required('Administrador')
 def balance_update(request, pk):
     balance = get_object_or_404(Balance, pk=pk)
     if request.method == 'POST':

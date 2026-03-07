@@ -56,6 +56,49 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="{{ form.medical.id_for_label }}">Médico:</label>
+                <div class="input-group">
+                    {{ form.medical }}
+                    {% if form.medical.errors %}
+                        <div class="field-error">{{ form.medical.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.nutrition.id_for_label }}">Nutrição:</label>
+                <div class="input-group">
+                    {{ form.nutrition }}
+                    {% if form.nutrition.errors %}
+                        <div class="field-error">{{ form.nutrition.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.percentage_medical.id_for_label }}">Percentual Médico (%):</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">percent</i></span>
+                    {{ form.percentage_medical }}
+                    {% if form.percentage_medical.errors %}
+                        <div class="field-error">{{ form.percentage_medical.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.percentage_nutrition.id_for_label }}">Percentual Nutrição (%):</label>
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="material-icons">percent</i></span>
+                    {{ form.percentage_nutrition }}
+                    {% if form.percentage_nutrition.errors %}
+                        <div class="field-error">{{ form.percentage_nutrition.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+
             <div class="form-actions">
                 <button type="submit" class="feature-link">
                     Salvar

@@ -44,27 +44,34 @@ class UserRegistrationForm(UserCreationForm):
 class BalanceForm(forms.ModelForm):
     class Meta:
         model = Balance
-        fields = ['date', 'type', 'description', 'expiration_date']
+        fields = ['date', 'type', 'description']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
-            'expiration_date': forms.DateInput(attrs={'type': 'date'}),
         }
         labels = {
-            'patient': 'Paciente',
+            'date': 'Data',
+            'type': 'Plano',
+            'description': 'Descrição',
         }
 
 class BalanceTypeForm(forms.ModelForm):
     class Meta:
         model = BalancePlan
-        fields = ['name', 'expiration_days', 'amount']
+        fields = ['name', 'expiration_days', 'amount', 'medical', 'nutrition', 'percentage_medical', 'percentage_nutrition']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Nome'}),
             'expiration_days': forms.NumberInput(attrs={'min': '0'}),
             'amount': forms.NumberInput(attrs={'step': '0.01'}),
+            'percentage_medical': forms.NumberInput(attrs={'step': '0.01'}),
+            'percentage_nutrition': forms.NumberInput(attrs={'step': '0.01'}),
         }
         labels = {
             'name': 'Nome',
             'expiration_days': 'Dias de expiração',
             'amount': 'Valor',
+            'medical': 'Médico',
+            'nutrition': 'Nutrição',
+            'percentage_medical': 'Percentual Médico',
+            'percentage_nutrition': 'Percentual Nutrição',
         }
 

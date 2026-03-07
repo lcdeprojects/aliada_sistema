@@ -1,0 +1,226 @@
+{% extends "core/base.html" %}
+
+{% block title %}Exportar Saldos - Sistema Aliada{% endblock %}
+
+{% block content %}
+<header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+    <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'balance_list' %}'">chevron_left</i>
+    <h1>Exportar Relatório de Saldos</h1>
+</header>
+
+<section class="dashboard-section">
+        <div class="export-header">
+            <h2><i class="material-icons" style="vertical-align: middle; margin-right: 10px;">file_download</i>Selecionar Período</h2>
+            <p>Escolha as datas de início e fim para gerar o relatório de saldos.</p>
+        </div>
+
+        <form method="post" class="export-form">
+            {% csrf_token %}
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date_from">Data de Início:</label>
+                    <div class="input-group">
+                        <span class="input-group-icon"><i class="material-icons">date_range</i></span>
+                        <input type="date" id="date_from" name="date_from" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_to">Data de Fim:</label>
+                    <div class="input-group">
+                        <span class="input-group-icon"><i class="material-icons">date_range</i></span>
+                        <input type="date" id="date_to" name="date_to" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="export-buttons">
+                <button type="submit" name="format" value="excel" class="export-btn excel-btn">
+                    <i class="material-icons">table_chart</i>
+                    Exportar Excel
+                </button>
+                <button type="submit" name="format" value="pdf" class="export-btn pdf-btn">
+                    <i class="material-icons">picture_as_pdf</i>
+                    Exportar PDF
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<style>
+.export-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.export-header {
+    padding: 30px 30px 20px 30px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.export-header h2 {
+    color: var(--primary-color);
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+}
+
+.export-header p {
+    color: var(--gray-color);
+    margin: 0;
+    font-size: 1em;
+}
+
+.export-form {
+    padding: 30px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-icon {
+    position: absolute;
+    left: 15px;
+    color: var(--gray-color);
+    z-index: 1;
+    font-size: 20px;
+}
+
+.input-group input[type="date"] {
+    width: 100%;
+    padding: 12px 15px 12px 50px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[type="date"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.export-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-width: 160px;
+    justify-content: center;
+}
+
+.excel-btn {
+    background: #217346;
+    color: white;
+    box-shadow: 0 2px 4px rgba(33, 115, 70, 0.2);
+}
+
+.excel-btn:hover {
+    background: #1e6b3d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(33, 115, 70, 0.3);
+}
+
+.pdf-btn {
+    background: #dc3545;
+    color: white;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.pdf-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .export-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .export-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .export-form {
+        padding: 20px;
+    }
+
+    .export-header {
+        padding: 20px;
+    }
+}
+</style>
+{% endblock %}
