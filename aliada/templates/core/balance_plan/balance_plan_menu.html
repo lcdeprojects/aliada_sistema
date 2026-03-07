@@ -1,0 +1,488 @@
+{% extends "core/base.html" %}
+
+{% block title %}Menu de Planos - Sistema Aliada{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="section-header">
+        <h2><i class="material-icons" style="vertical-align: middle; margin-right: 10px;">account_balance</i>Gerenciamento de Planos</h2>
+    </div>
+
+    <div class="menu-grid">
+        <!-- List Plans -->
+        <div class="menu-card">
+            <div class="card-icon list">
+                <i class="material-icons">add_circle</i>
+            </div>
+            <div class="card-content">
+                <h3>Ver Todos os Planos</h3>
+                <p>Visualize e gerencie todos os planos de saldo cadastrados no sistema.</p>
+                <div class="card-stats">
+                    <span class="stat-item">
+                        <i class="material-icons">account_balance</i>
+                        <span id="total-plans">{{ total_plans }}</span> Planos
+                    </span>
+                </div>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'balance_plan_list' %}" class="feature-link">
+                    <i class="material-icons">arrow_forward</i>
+                    Ver Planos
+                </a>
+            </div>
+        </div>
+
+        <!-- Create New Plan -->
+        <div class="menu-card">
+            <div class="card-icon create">
+                <i class="material-icons">add_circle</i>
+            </div>
+            <div class="card-content">
+                <h3>Criar Novo Plano</h3>
+                <p>Cadastre um novo plano de saldo com valores e períodos de validade.</p>
+                <div class="card-features">
+                    <div class="feature-item">
+                        <i class="material-icons">attach_money</i>
+                        <span>Definir valores</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="material-icons">schedule</i>
+                        <span>Dias de validade</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="material-icons">label</i>
+                        <span>Nomes personalizados</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'balance_plan_create' %}" class="feature-link create">
+                    <i class="material-icons">add</i>
+                    Criar Plano
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="menu-card stats">
+            <div class="card-icon stats">
+                <i class="material-icons">analytics</i>
+            </div>
+            <div class="card-content">
+                <h3>Estatísticas Rápidas</h3>
+                <p>Resumo dos planos de saldo e suas configurações.</p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">{{ stats.total_plans }}</div>
+                        <div class="stat-label">Total de Planos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">R$ {{ stats.avg_amount|floatformat:2 }}</div>
+                        <div class="stat-label">Valor Médio</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">{{ stats.avg_expiration|floatformat:0 }}</div>
+                        <div class="stat-label">Dias Médios</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'balance_plan_list' %}" class="feature-link">
+                    <i class="material-icons">bar_chart</i>
+                    Ver Detalhes
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="menu-card activity">
+            <div class="card-icon activity">
+                <i class="material-icons">history</i>
+            </div>
+            <div class="card-content">
+                <h3>Atividade Recente</h3>
+                <p>Últimas modificações nos planos de saldo.</p>
+                <div class="activity-list">
+                    {% for activity in recent_activities %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="material-icons">{{ activity.icon }}</i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">{{ activity.title }}</div>
+                                <div class="activity-time">{{ activity.time|timesince }} atrás</div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="no-activity">
+                            <i class="material-icons">info</i>
+                            <span>Nenhuma atividade recente</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'balance_plan_list' %}" class="feature-link">
+                    <i class="material-icons">visibility</i>
+                    Ver Todas
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h3>Ações Rápidas</h3>
+        <div class="action-buttons">
+            <a href="{% url 'balance_plan_create' %}" class="quick-action-btn primary">
+                <i class="material-icons">add</i>
+                Novo Plano
+            </a>
+            <a href="{% url 'balance_plan_list' %}" class="quick-action-btn secondary">
+                <i class="material-icons">list</i>
+                Listar Todos
+            </a>
+            <a href="{% url 'home' %}" class="quick-action-btn tertiary">
+                <i class="material-icons">home</i>
+                Início
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.menu-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), #3498db);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-card:hover::before {
+    opacity: 1;
+}
+
+.card-icon {
+    background: linear-gradient(135deg, var(--primary-color), #3498db);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+.card-icon.list {
+    background: linear-gradient(135deg, var(--primary-color), #3498db);
+}
+
+.card-icon.create {
+    background: linear-gradient(135deg, var(--success-color), #27ae60);
+}
+
+.card-icon.stats {
+    background: linear-gradient(135deg, var(--info-color), #2980b9);
+}
+
+.card-icon.activity {
+    background: linear-gradient(135deg, var(--warning-color), #f39c12);
+}
+
+.card-content {
+    padding: 30px;
+}
+
+.card-content h3 {
+    color: var(--primary-color);
+    margin: 0 0 15px 0;
+    font-size: 1.4em;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.card-content p {
+    color: var(--text-color);
+    margin-bottom: 25px;
+    line-height: 1.6;
+    font-size: 0.95em;
+    opacity: 0.8;
+}
+
+.card-stats {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray-color);
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.stat-item i {
+    color: var(--primary-color);
+    font-size: 20px;
+}
+
+.card-features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-color);
+    font-size: 0.9em;
+}
+
+.feature-item i {
+    color: var(--success-color);
+    font-size: 18px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+}
+
+.stat-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.8em;
+    color: var(--gray-color);
+    margin-top: 5px;
+}
+
+.activity-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+
+.activity-details {
+    flex: 1;
+}
+
+.activity-title {
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+.activity-time {
+    font-size: 0.8em;
+    color: var(--gray-color);
+    margin-top: 2px;
+}
+
+.no-activity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    color: var(--gray-color);
+    font-style: italic;
+}
+
+.card-action {
+    padding: 25px 30px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-top: 1px solid var(--border-color);
+}
+
+.card-action .feature-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+.card-action .feature-link:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.card-action .feature-link.create {
+    background: var(--success-color);
+    color: white;
+    box-shadow: 0 2px 4px rgba(39, 174, 96, 0.2);
+}
+
+.card-action .feature-link.create:hover {
+    background: #27ae60;
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+.quick-actions {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+}
+
+.quick-actions h3 {
+    color: var(--primary-color);
+    margin: 0 0 25px 0;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.quick-action-btn.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.quick-action-btn.primary:hover {
+    background-color: #2980b9;
+}
+
+.quick-action-btn.secondary {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.quick-action-btn.secondary:hover {
+    background-color: #2980b9;
+}
+
+.quick-action-btn.tertiary {
+    background-color: var(--gray-color);
+    color: white;
+}
+
+.quick-action-btn.tertiary:hover {
+    background-color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .quick-action-btn {
+        justify-content: center;
+    }
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.section-header h2 {
+    color: var(--primary-color);
+    margin: 0;
+}
+</style>
+{% endblock %}

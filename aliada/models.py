@@ -1,10 +1,9 @@
-from django.db import models
+from datetime import datetime, timedelta
 
 # Create your models here.
-from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
-from datetime import timedelta
+from django.db import models
+
 # Create your models here.
 
 class PatientRecord(models.Model):
@@ -45,18 +44,20 @@ class MedicalRecord(models.Model):
     def __str__(self):
         return f"Registro para {self.patient.first_name} {self.patient.last_name} em {self.date}"
 
+class BalancePlan(models.Model):
+    name = models.CharField(max_length=50)
+    expiration_days = models.IntegerField()
+    amount = models.FloatField()
+    
+    def __str__(self):
+        return self.name
+        
 class Balance(models.Model):
     patient = models.ForeignKey(PatientRecord, on_delete=models.CASCADE, related_name='balances')
     date = models.DateField()
-    TYPE_CHOICES = [
-        ('consulta', 'Consulta'),
-        ('plano_3', 'Plano 3'),
-        ('plano_6', 'Plano 6'),
-        ('outro', 'Outro'),
-    ]
-    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='consulta')
+    type = models.ForeignKey(BalancePlan, on_delete=models.CASCADE, related_name='balances')
+    amount = models.FloatField(blank=True, null=True)
     expiration_date = models.DateField(default=None, null=True, blank=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_balances')
     created_at = models.DateTimeField(default=datetime.now)
@@ -76,13 +77,8 @@ class Balance(models.Model):
         return False
     
     def save(self, *args, **kwargs):
-        if self.type == 'consulta':
-            self.expiration_date = self.date + timedelta(days=30)
-        elif self.type == 'plano_3':
-            self.expiration_date = self.date + timedelta(days=90)
-        elif self.type == 'plano_6':
-            self.expiration_date = self.date + timedelta(days=180)
-        else:
-            self.expiration_date = self.expiration_date
+        self.expiration_date = self.date + timedelta(days=self.type.expiration_days) 
+        self.amount = self.type.amount     
+       
         super().save(*args, **kwargs)
 

@@ -1,0 +1,181 @@
+{% extends "core/base.html" %}
+
+{% block title %}Planos de Saldo - Sistema Aliada{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="section-header">
+        <h2><i class="material-icons" style="vertical-align: middle; margin-right: 10px;">account_balance</i>Planos de Saldo</h2>
+        <a href="{% url 'balance_plan_create' %}" class="feature-link">
+            <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">add</i>
+            Novo Plano
+        </a>
+    </div>
+
+    {% if plans %}
+        <div class="balance-plans-grid">
+            {% for plan in plans %}
+                <div class="balance-plan-card">
+                    <div class="plan-header">
+                        <h3>{{ plan.name }}</h3>
+                        <div class="plan-amount">
+                            <i class="material-icons">attach_money</i>
+                            <span>R$ {{ plan.amount|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-details">
+                        <div class="detail-item">
+                            <i class="material-icons">schedule</i>
+                            <span>{{ plan.expiration_days }} dias de validade</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-actions">
+                        <a href="{% url 'balance_plan_update' plan.pk %}" class="edit-link">
+                            <i class="material-icons">edit</i> Editar
+                        </a>
+                        <a href="{% url 'balance_plan_delete' plan.pk %}" class="delete-link">
+                            <i class="material-icons">delete</i> Excluir
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-results">
+            <i class="material-icons" style="font-size: 4em; color: var(--gray-color); margin-bottom: 20px;">account_balance</i>
+            <h2>Nenhum plano de saldo encontrado</h2>
+            <p>Não há planos de saldo registrados no sistema. <a href="{% url 'balance_plan_create' %}" class="create-link">Crie o primeiro plano</a>.</p>
+        </div>
+    {% endif %}
+</section>
+
+<style>
+.balance-plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.balance-plan-card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.balance-plan-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.plan-header h3 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.plan-amount {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    color: var(--success-color);
+    font-size: 1.1em;
+}
+
+.plan-details {
+    margin-bottom: 20px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.detail-item i {
+    color: var(--gray-color);
+    font-size: 18px;
+}
+
+.plan-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.plan-actions .edit-link,
+.plan-actions .delete-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.plan-actions .edit-link {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.plan-actions .edit-link:hover {
+    background-color: #2980b9;
+}
+
+.plan-actions .delete-link {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.plan-actions .delete-link:hover {
+    background-color: #c0392b;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .balance-plans-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .plan-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}

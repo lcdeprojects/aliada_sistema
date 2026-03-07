@@ -1,7 +1,9 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import PatientRecord, MedicalRecord, Balance
+from django.contrib.auth.models import User
+
+from .models import Balance, BalancePlan, MedicalRecord, PatientRecord
+
 
 class PatientRecordForm(forms.ModelForm):
     class Meta:
@@ -42,7 +44,7 @@ class UserRegistrationForm(UserCreationForm):
 class BalanceForm(forms.ModelForm):
     class Meta:
         model = Balance
-        fields = ['date', 'type', 'amount', 'description', 'expiration_date']
+        fields = ['date', 'type', 'description', 'expiration_date']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'expiration_date': forms.DateInput(attrs={'type': 'date'}),
@@ -50,3 +52,19 @@ class BalanceForm(forms.ModelForm):
         labels = {
             'patient': 'Paciente',
         }
+
+class BalanceTypeForm(forms.ModelForm):
+    class Meta:
+        model = BalancePlan
+        fields = ['name', 'expiration_days', 'amount']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Nome'}),
+            'expiration_days': forms.NumberInput(attrs={'min': '0'}),
+            'amount': forms.NumberInput(attrs={'step': '0.01'}),
+        }
+        labels = {
+            'name': 'Nome',
+            'expiration_days': 'Dias de expiração',
+            'amount': 'Valor',
+        }
+

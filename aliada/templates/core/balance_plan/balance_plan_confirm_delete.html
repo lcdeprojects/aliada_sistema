@@ -1,0 +1,192 @@
+{% extends "core/base.html" %}
+
+{% block title %}Excluir Plano de Saldo - Sistema Aliada{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="section-header">
+        <h2><i class="material-icons" style="vertical-align: middle; margin-right: 10px;">delete</i>Excluir Plano de Saldo</h2>
+        <a href="{% url 'balance_plan_list' %}" class="feature-link">
+            <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">arrow_back</i>
+            Voltar
+        </a>
+    </div>
+
+    <div class="delete-container">
+        <div class="delete-warning">
+            <i class="material-icons" style="font-size: 4em; color: var(--warning-color); margin-bottom: 20px;">warning</i>
+            <h3>Tem certeza que deseja excluir este plano?</h3>
+        </div>
+
+        <div class="plan-details">
+            <h4>Detalhes do Plano:</h4>
+            <div class="detail-item">
+                <strong>Nome:</strong> {{ plan.name }}
+            </div>
+            <div class="detail-item">
+                <strong>Valor:</strong> R$ {{ plan.amount|floatformat:2 }}
+            </div>
+            <div class="detail-item">
+                <strong>Dias de Validade:</strong> {{ plan.expiration_days }} dias
+            </div>
+        </div>
+
+        <div class="alert-message">
+            <i class="material-icons" style="vertical-align: middle; margin-right: 10px;">info</i>
+            <strong>Atenção:</strong> Esta ação não pode ser desfeita. Ao excluir este plano, todos os saldos associados a ele poderão ser afetados.
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="delete-btn">
+                    <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">delete</i>
+                    Sim, Excluir Plano
+                </button>
+                <a href="{% url 'balance_plan_list' %}" class="cancel-btn">
+                    <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">cancel</i>
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<style>
+.delete-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.section-header h2 {
+    color: var(--danger-color);
+    margin: 0;
+}
+
+.delete-warning {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.delete-warning h3 {
+    color: var(--text-color);
+    margin: 0;
+}
+
+.plan-details {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+}
+
+.plan-details h4 {
+    color: var(--primary-color);
+    margin: 0 0 15px 0;
+}
+
+.detail-item {
+    display: flex;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.detail-item strong {
+    min-width: 150px;
+    color: var(--text-color);
+}
+
+.alert-message {
+    display: flex;
+    align-items: center;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 30px;
+    color: #856404;
+}
+
+.delete-form {
+    margin-top: 20px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: var(--danger-color);
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 16px;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+.cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: var(--gray-color);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .delete-container {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .detail-item {
+        flex-direction: column;
+    }
+    
+    .detail-item strong {
+        min-width: auto;
+        margin-bottom: 5px;
+    }
+}
+</style>
+{% endblock %}

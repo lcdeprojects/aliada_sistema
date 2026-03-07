@@ -334,7 +334,7 @@ footer {
     position: relative ;
     width: calc(100% - var(--sidebar-width));
     background: white;
-    left: calc(var(--sidebar-width) - 10px);
+    left: calc(var(--sidebar-width) - 100px);
     overflow: hidden;
     transition: left 0.5s ease, width 0.5s ease;
     min-height: 100vh;

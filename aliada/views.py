@@ -1,12 +1,15 @@
 # Create your views here.
+from datetime import date, timedelta
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import models
 from django.db.models import Sum
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from datetime import date, timedelta
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import (
     BalanceForm,
@@ -15,7 +18,7 @@ from .forms import (
     UserRegistrationForm,
 )
 from .groups import group_required
-from .models import Balance, MedicalRecord, PatientRecord
+from .models import Balance, BalancePlan, MedicalRecord, PatientRecord
 
 
 def home(request):
@@ -269,3 +272,97 @@ def active_plan(request):
         )
     balances = balances.order_by('-date')
     return render(request, 'core/balance/active_plan.html', {'balances': balances, 'status': status})
+
+@csrf_exempt
+def balance_plans_api(request):
+    """API endpoint to get BalancePlan data for the form"""
+    if request.method == 'GET':
+        plans = BalancePlan.objects.all()
+        data = {}
+        for plan in plans:
+            data[str(plan.id)] = {
+                'name': plan.name,
+                'amount': plan.amount,
+                'expiration_days': plan.expiration_days
+            }
+        return JsonResponse(data)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@group_required('Administrador')
+def balance_plan_menu(request):
+    """BalancePlan management menu with statistics and recent activity"""
+    from django.db.models import Avg
+    from django.utils import timezone
+    
+    plans = BalancePlan.objects.all()
+    
+    # Calculate statistics
+    stats = {
+        'total_plans': plans.count(),
+        'avg_amount': plans.aggregate(Avg('amount'))['amount__avg'] or 0,
+        'avg_expiration': plans.aggregate(Avg('expiration_days'))['expiration_days__avg'] or 0,
+    }
+    
+    # Mock recent activity (you can customize this based on your needs)
+    recent_activities = []
+    for plan in plans.order_by('-pk')[:5]:
+        recent_activities.append({
+            'title': f'Plano "{plan.name}" criado/alterado',
+            'icon': 'edit',
+            'time': plan.updated_at if hasattr(plan, 'updated_at') else timezone.now()
+        })
+    
+    context = {
+        'total_plans': plans.count(),
+        'stats': stats,
+        'recent_activities': recent_activities,
+    }
+    
+    return render(request, 'core/balance_plan/balance_plan_menu.html', context)
+
+@group_required('Administrador')
+def balance_plan_list(request):
+    """List all BalancePlans"""
+    plans = BalancePlan.objects.all()
+    return render(request, 'core/balance_plan/balance_plan_list.html', {'plans': plans})
+
+@group_required('Administrador')
+def balance_plan_create(request):
+    """Create a new BalancePlan"""
+    if request.method == 'POST':
+        from .forms import BalanceTypeForm
+        form = BalanceTypeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Plano de saldo criado com sucesso!')
+            return redirect('balance_plan_list')
+    else:
+        from .forms import BalanceTypeForm
+        form = BalanceTypeForm()
+    return render(request, 'core/balance_plan/balance_plan_form.html', {'form': form, 'title': 'Criar Plano de Saldo'})
+
+@group_required('Administrador')
+def balance_plan_update(request, pk):
+    """Update an existing BalancePlan"""
+    plan = get_object_or_404(BalancePlan, pk=pk)
+    if request.method == 'POST':
+        from .forms import BalanceTypeForm
+        form = BalanceTypeForm(request.POST, instance=plan)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Plano de saldo atualizado com sucesso!')
+            return redirect('balance_plan_list')
+    else:
+        from .forms import BalanceTypeForm
+        form = BalanceTypeForm(instance=plan)
+    return render(request, 'core/balance_plan/balance_plan_form.html', {'form': form, 'title': 'Editar Plano de Saldo'})
+
+@group_required('Administrador')
+def balance_plan_delete(request, pk):
+    """Delete a BalancePlan"""
+    plan = get_object_or_404(BalancePlan, pk=pk)
+    if request.method == 'POST':
+        plan.delete()
+        messages.success(request, 'Plano de saldo excluído com sucesso!')
+        return redirect('balance_plan_list')
+    return render(request, 'core/balance_plan/balance_plan_confirm_delete.html', {'plan': plan})
