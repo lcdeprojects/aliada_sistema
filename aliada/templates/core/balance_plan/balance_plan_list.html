@@ -3,13 +3,14 @@
 {% block title %}Planos de Saldo - Sistema Aliada{% endblock %}
 
 {% block content %}
+    <header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+        <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'balance_plan_menu' %}'">chevron_left</i>
+        <h1>Gerenciamento de Planos de Saldo</h1>
+    </header>
 <section class="dashboard-section">
     <div class="section-header">
-        <h2><i class="material-icons" style="vertical-align: middle; margin-right: 10px;">account_balance</i>Planos de Saldo</h2>
-        <a href="{% url 'balance_plan_create' %}" class="feature-link">
-            <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">add</i>
-            Novo Plano
-        </a>
+        <center>
+        </center>
     </div>
 
     {% if plans %}
@@ -54,50 +55,71 @@
 <style>
 .balance-plans-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
     margin-top: 30px;
 }
 
 .balance-plan-card {
     background: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
     border: 1px solid var(--border-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
 .balance-plan-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.balance-plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), #3498db);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.balance-plan-card:hover::before {
+    opacity: 1;
 }
 
 .plan-header {
+    padding: 25px 25px 15px 25px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border-color);
+    align-items: flex-start;
 }
 
 .plan-header h3 {
-    color: var(--primary-color);
     margin: 0;
-    font-size: 1.2em;
+    color: var(--primary-color);
+    font-size: 1.4em;
+    font-weight: 600;
 }
 
 .plan-amount {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-weight: bold;
     color: var(--success-color);
-    font-size: 1.1em;
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
+.plan-amount i {
+    font-size: 24px;
 }
 
 .plan-details {
+    padding: 0 25px;
     margin-bottom: 20px;
 }
 
@@ -105,56 +127,102 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
     color: var(--text-color);
+    font-size: 0.95em;
+    margin-bottom: 10px;
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
 }
 
 .detail-item i {
-    color: var(--gray-color);
-    font-size: 18px;
+    color: var(--primary-color);
+    font-size: 20px;
 }
 
 .plan-actions {
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-top: 1px solid var(--border-color);
     display: flex;
-    gap: 10px;
+    gap: 15px;
     justify-content: flex-end;
 }
 
-.plan-actions .edit-link,
-.plan-actions .delete-link {
-    display: flex;
+.edit-link, .delete-link {
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 8px 12px;
-    border-radius: var(--border-radius);
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
     text-decoration: none;
+    font-weight: 500;
     font-size: 0.9em;
-    transition: background-color 0.2s ease;
+    transition: all 0.3s ease;
 }
 
-.plan-actions .edit-link {
-    background-color: var(--info-color);
+.edit-link {
+    background: var(--primary-color);
     color: white;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
 }
 
-.plan-actions .edit-link:hover {
-    background-color: #2980b9;
+.edit-link:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
 }
 
-.plan-actions .delete-link {
-    background-color: var(--danger-color);
+.delete-link {
+    background: var(--danger-color);
     color: white;
+    box-shadow: 0 2px 4px rgba(244, 67, 54, 0.2);
 }
 
-.plan-actions .delete-link:hover {
-    background-color: #c0392b;
+.delete-link:hover {
+    background: #d32f2f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+    margin-top: 30px;
+}
+
+.no-results h2 {
+    color: var(--gray-color);
+    margin: 20px 0 10px 0;
+    font-size: 1.5em;
+}
+
+.no-results p {
+    color: var(--gray-color);
+    margin: 0 0 20px 0;
+    font-size: 1em;
+}
+
+.create-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.create-link:hover {
+    text-decoration: underline;
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .section-header h2 {
@@ -165,16 +233,21 @@
 @media (max-width: 768px) {
     .balance-plans-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
     
-    .section-header {
+    .plan-header {
         flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
+        gap: 10px;
+        align-items: flex-start;
     }
     
     .plan-actions {
         flex-direction: column;
+    }
+    
+    .edit-link, .delete-link {
+        justify-content: center;
     }
 }
 </style>

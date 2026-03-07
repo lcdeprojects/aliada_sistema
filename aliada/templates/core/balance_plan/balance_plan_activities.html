@@ -1,0 +1,253 @@
+{% extends "core/base.html" %}
+
+{% block title %}Atividades Recentes - Planos de Saldo{% endblock %}
+
+{% block content %}
+<header style="display: flex; align-items: center; margin-bottom: 20px; justify-content: center;">
+    <i class="material-icons" style="cursor: pointer; margin-right: 10px; font-size: 40px;" onclick="window.location.href='{% url 'balance_plan_menu' %}'">chevron_left</i>
+    <h1>Atividades Recentes dos Planos</h1>
+</header>
+
+<section class="dashboard-section">
+    {% if recent_activities %}
+        <div class="activities-container">
+            <div class="activities-header">
+                <h2><i class="material-icons" style="vertical-align: middle; margin-right: 10px;">history</i>Histórico de Atividades</h2>
+                <p>Veja as últimas modificações nos planos de saldo</p>
+            </div>
+            
+            <div class="activities-list">
+                {% for activity in recent_activities %}
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="material-icons">{{ activity.icon }}</i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ activity.title }}</div>
+                            <div class="activity-description">{{ activity.description }}</div>
+                            <div class="activity-time">{{ activity.time|timesince }} atrás</div>
+                        </div>
+                        <div class="activity-plan">
+                            <span class="plan-badge">{{ activity.plan_name }}</span>
+                        </div>
+                        <div class="activity-updated">
+                            <div class="activity-updated-by">Atualizado por: {{ activity.updated_by }}</div>
+                            <div class="activity-updated-at">Em: {{ activity.updated_at }}</div>
+                        </div>
+                        
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="activities-footer">
+                <a href="{% url 'balance_plan_list' %}" class="feature-link">
+                    <i class="material-icons">list</i>
+                    Ver Todos os Planos
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="no-activities">
+            <i class="material-icons" style="font-size: 4em; color: var(--gray-color); margin-bottom: 20px;">history</i>
+            <h2>Nenhuma atividade recente</h2>
+            <p>Não há atividades recentes nos planos de saldo. <a href="{% url 'balance_plan_create' %}" class="create-link">Crie um plano</a> para começar.</p>
+        </div>
+    {% endif %}
+</section>
+
+<style>
+.activities-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.activities-header {
+    padding: 30px 30px 20px 30px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.activities-header h2 {
+    color: var(--primary-color);
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+}
+
+.activities-header p {
+    color: var(--gray-color);
+    margin: 0;
+    font-size: 1em;
+}
+
+.activities-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 30px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.activity-item:hover {
+    background-color: #f8f9fa;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.activity-icon i {
+    font-size: 24px;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-size: 1.1em;
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.activity-description {
+    font-size: 0.95em;
+    color: var(--gray-color);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.activity-time {
+    font-size: 0.85em;
+    color: var(--gray-color);
+    font-style: italic;
+}
+
+.activity-plan {
+    flex-shrink: 0;
+}
+
+.plan-badge {
+    background: linear-gradient(135deg, var(--primary-color), #3498db);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.activities-footer {
+    padding: 25px 30px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.activities-footer .feature-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+}
+
+.activities-footer .feature-link:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.no-activities {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+}
+
+.no-activities h2 {
+    color: var(--gray-color);
+    margin: 20px 0 10px 0;
+    font-size: 1.5em;
+}
+
+.no-activities p {
+    color: var(--gray-color);
+    margin: 0 0 20px 0;
+    font-size: 1em;
+}
+
+.create-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.create-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .activities-container {
+        margin: 0 20px;
+    }
+    
+    .activities-header {
+        padding: 20px;
+    }
+    
+    .activity-item {
+        padding: 15px 20px;
+        gap: 15px;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .activity-icon i {
+        font-size: 20px;
+    }
+    
+    .activity-title {
+        font-size: 1em;
+    }
+    
+    .activities-footer {
+        padding: 20px;
+    }
+}
+</style>
+{% endblock %}

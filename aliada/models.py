@@ -48,6 +48,10 @@ class BalancePlan(models.Model):
     name = models.CharField(max_length=50)
     expiration_days = models.IntegerField()
     amount = models.FloatField()
+    created_at = models.DateTimeField(default=datetime.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_balance_plans')
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_balance_plans')
     
     def __str__(self):
         return self.name

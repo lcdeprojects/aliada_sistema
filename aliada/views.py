@@ -9,7 +9,9 @@ from django.db import models
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+
 
 from .forms import (
     BalanceForm,
@@ -366,3 +368,26 @@ def balance_plan_delete(request, pk):
         messages.success(request, 'Plano de saldo excluído com sucesso!')
         return redirect('balance_plan_list')
     return render(request, 'core/balance_plan/balance_plan_confirm_delete.html', {'plan': plan})
+
+@group_required('Administrador')
+def balance_plan_activities(request):
+    """Show recent activities for BalancePlans"""
+    from .models import BalancePlan
+    recent_activities = []
+    for plan in BalancePlan.objects.all().order_by('-id')[:10]:
+        recent_activities.append({
+            'title': f'Plano "{plan.name}" criado',
+            'description': f'Valor: R$ {plan.amount}, Validade: {plan.expiration_days} dias',
+            'icon': 'add_circle',
+            'updated_by': plan.updated_by,
+            'updated_at': plan.updated_at,
+            'created_at': plan.created_at,
+            'time': timezone.now(),
+            'plan_name': plan.name
+        })
+    
+    context = {
+        'recent_activities': recent_activities,
+    }
+    
+    return render(request, 'core/balance_plan/balance_plan_activities.html', context)

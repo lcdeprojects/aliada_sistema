@@ -35,6 +35,7 @@ urlpatterns = [
     path('balance-plans/create/', views.balance_plan_create, name='balance_plan_create'),
     path('balance-plans/<int:pk>/update/', views.balance_plan_update, name='balance_plan_update'),
     path('balance-plans/<int:pk>/delete/', views.balance_plan_delete, name='balance_plan_delete'),
+    path('balance-plans/activities/', views.balance_plan_activities, name='balance_plan_activities'),
     # API endpoints
     path('api/balance-plans/', views.balance_plans_api, name='balance_plans_api'),
 ]
